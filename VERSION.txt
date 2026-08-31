@@ -1,0 +1,5 @@
+SPIN THE WHEEL — EQUAL / NO REPEAT — V2
+
+Every remaining outcome has equal slice size and equal selection chance.
+Selected outcomes are removed until RESET WHEEL.
+No good/bad categories or weights are used.

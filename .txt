@@ -1,0 +1,60 @@
+THE WHEEL — LOCAL REUSABLE VERSION
+==================================
+
+HOW TO OPEN
+-----------
+1. Extract the ZIP.
+2. Double-click index.html.
+3. No web server, account, package manager, or internet connection is required.
+
+HOW THE WHEEL WORKS
+-------------------
+- Every visible slice is exactly the same size.
+- Every remaining outcome has exactly the same chance.
+- There are NO good/bad/amazing/horrendous categories.
+- There are NO weights.
+- Once an outcome is selected, it is reserved immediately and cannot be selected again.
+- The landed slice remains visible until the next spin starts. At that moment it disappears and the remaining slices redistribute equally.
+- Selected outcomes stay removed even if the page is refreshed or closed and reopened.
+- Click RESET WHEEL (or press R) to restore every outcome.
+- CLEAR HISTORY only clears the history list; it does NOT restore used outcomes.
+
+EDITING OUTCOMES
+----------------
+Open wheel-data.js in Notepad, VS Code, etc.
+
+Each item looks like:
+
+  { id: "full-hp", label: "Use a full HP build for this boss", short: "FULL HP" },
+
+id    = unique internal name. Do not reuse the same id twice.
+label = full result shown in the result panel.
+short = compact text drawn on the wheel.
+
+To add an outcome, copy one line and give it a new id/label/short.
+To remove an outcome, delete its line.
+No percentages need to be recalculated. The app automatically divides the wheel equally.
+
+IMPORTANT AFTER EDITING THE LIST
+--------------------------------
+If you changed ids while the app had already been used, open the wheel and press RESET WHEEL once.
+
+FILES
+-----
+index.html       main local app
+styles.css       appearance
+app.js           wheel logic
+wheel-data.js    EDIT THIS FILE for outcomes
+wheel-data.json  reference copy of the data format
+README.txt       this guide
+
+KEYS
+----
+SPACE = spin
+F     = fullscreen
+R     = reset wheel / restore all outcomes
+
+FONT
+----
+The app asks Windows for Bahnschrift at weight 600 (SemiBold).
+No font file is bundled in the ZIP.

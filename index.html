@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0f1111" />
+  <title>The Wheel</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow" id="subtitle">EVERY DEATH = ONE SPIN</div>
+        <h1 id="title">SPIN THE WHEEL</h1>
+      </div>
+      <div class="top-actions" aria-label="Wheel controls">
+        <button class="icon-button" id="soundButton" type="button" aria-pressed="true" title="Toggle sound">SOUND ON</button>
+        <button class="icon-button" id="fullscreenButton" type="button" title="Fullscreen">FULLSCREEN</button>
+      </div>
+    </header>
+
+    <section class="stage">
+      <div class="wheel-column">
+        <div class="wheel-wrap" id="wheelWrap">
+          <div class="pointer" aria-hidden="true"><span></span></div>
+          <canvas id="wheel" width="900" height="900" aria-label="Equal chance wheel without replacement"></canvas>
+          <button id="spinButton" class="spin-button" type="button" aria-label="Spin the wheel">
+            <span>SPIN</span>
+            <small>SPACE</small>
+          </button>
+        </div>
+
+        <div class="status-strip" id="statusStrip" aria-label="Wheel status"></div>
+      </div>
+
+      <aside class="side-panel">
+        <div class="panel-section result-section" aria-live="polite">
+          <div class="panel-label">LATEST RESULT</div>
+          <div id="resultText" class="result-text">Spin after a death.</div>
+          <div id="resultChance" class="result-chance">—</div>
+        </div>
+
+        <div class="panel-rule"></div>
+
+        <div class="panel-section">
+          <div class="panel-heading-row">
+            <div class="panel-label">SPIN HISTORY</div>
+            <button id="clearButton" class="text-button" type="button">CLEAR HISTORY</button>
+          </div>
+          <ol class="history" id="history">
+            <li class="history-empty">No spins yet.</li>
+          </ol>
+        </div>
+
+        <div class="reset-row">
+          <button id="resetWheelButton" class="reset-button" type="button">RESET WHEEL</button>
+          <div>Restores every previously selected outcome.</div>
+        </div>
+
+        <div class="panel-footer">
+          <span><kbd>SPACE</kbd> spin</span>
+          <span><kbd>F</kbd> fullscreen</span>
+          <span><kbd>R</kbd> reset wheel</span>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="result-flash" id="resultFlash" aria-hidden="true"></div>
+
+  <script src="wheel-data.js"></script>
+  <script src="app.js"></script>
+<div style="position:fixed;right:10px;bottom:8px;font:600 10px Bahnschrift,Arial Narrow,sans-serif;letter-spacing:.12em;opacity:.22;pointer-events:none">EQUAL / NO REPEAT · V2</div>
+</body>
+</html>
