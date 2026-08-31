@@ -15,16 +15,21 @@
         <h1 id="title">SPIN THE WHEEL</h1>
       </div>
       <div class="top-actions" aria-label="Wheel controls">
+        <nav class="app-tabs" aria-label="Application views">
+          <button class="app-tab is-active" type="button" data-view="wheel">WHEEL</button>
+          <button class="app-tab" type="button" data-view="tracker">BOSS TRACKER</button>
+        </nav>
+        <button class="icon-button" id="rosterButton" type="button">ROSTER</button>
         <button class="icon-button" id="soundButton" type="button" aria-pressed="true" title="Toggle sound">SOUND ON</button>
         <button class="icon-button" id="fullscreenButton" type="button" title="Fullscreen">FULLSCREEN</button>
       </div>
     </header>
 
-    <section class="stage">
+    <section class="stage" id="wheelView">
       <div class="wheel-column">
         <div class="wheel-wrap" id="wheelWrap">
           <div class="pointer" aria-hidden="true"><span></span></div>
-          <canvas id="wheel" width="900" height="900" aria-label="Equal chance wheel without replacement"></canvas>
+          <canvas id="wheel" width="900" height="900" aria-label="Fate wheel"></canvas>
           <button id="spinButton" class="spin-button" type="button" aria-label="Spin the wheel">
             <span>SPIN</span>
             <small>SPACE</small>
@@ -32,45 +37,211 @@
         </div>
 
         <div class="status-strip" id="statusStrip" aria-label="Wheel status"></div>
+        <section class="wheel-lower-panel">
+          <div class="result-section" aria-live="polite">
+            <div class="panel-label">LATEST RESULT</div>
+            <div id="resultText" class="result-text">Spin the wheel.</div>
+            <div id="resultChance" class="result-chance">—</div>
+          </div>
+          <div class="wheel-history-section">
+            <div class="panel-heading-row"><div class="panel-label">SPIN HISTORY</div><button id="clearButton" class="text-button" type="button">CLEAR HISTORY</button></div>
+            <ol class="history" id="history"><li class="history-empty">No outcomes yet.</li></ol>
+          </div>
+          <div class="wheel-reset-section">
+            <button id="resetWheelButton" class="reset-button" type="button">RESET OUTCOME WHEELS</button>
+            <div>Restores all removed Challenge and Blessing outcomes.</div>
+          </div>
+        </section>
       </div>
 
       <aside class="side-panel">
-        <div class="panel-section result-section" aria-live="polite">
-          <div class="panel-label">LATEST RESULT</div>
-          <div id="resultText" class="result-text">Spin after a death.</div>
-          <div id="resultChance" class="result-chance">—</div>
+        <div class="panel-section active-character-section" id="activeCharacterSection">
+          <div class="panel-heading-row">
+            <div class="panel-label">ACTIVE CHARACTER</div>
+            <button id="chooseCharacterButton" class="text-button" type="button">CHOOSE</button>
+          </div>
+          <button id="activeCharacterButton" class="active-character" type="button">
+            <img id="activeCharacterPortrait" alt="" hidden />
+            <span>
+              <strong id="activeCharacterName">CHOOSE CHARACTER</strong>
+              <small id="activeCharacterWeapon">PICK ONE BEFORE SPINNING FATE</small>
+            </span>
+          </button>
+        </div>
+
+        <div class="versus-divider active-character-rule" id="activeCharacterRule" aria-hidden="true"><span>VS</span></div>
+
+        <div class="panel-section current-boss-section">
+          <div class="panel-label">CURRENT BOSS</div>
+          <button id="wheelBossCard" class="wheel-boss-card" type="button">
+            <img id="wheelBossPortrait" alt="" hidden />
+            <span><small id="wheelBossType">CHOOSE A BOSS</small><strong id="wheelBossName">OPEN BOSS TRACKER</strong><span id="wheelBossMatchup" class="boss-matchup"></span></span>
+          </button>
         </div>
 
         <div class="panel-rule"></div>
 
-        <div class="panel-section">
+        <div class="panel-section challenge-section">
           <div class="panel-heading-row">
-            <div class="panel-label">SPIN HISTORY</div>
-            <button id="clearButton" class="text-button" type="button">CLEAR HISTORY</button>
+            <div class="panel-label">ACTIVE EFFECTS</div>
+            <div class="challenge-heading-actions">
+              <span class="challenge-count" id="challengeCount">00</span>
+              <button id="clearChallengesButton" class="text-button" type="button">CLEAR FOR NEXT BOSS</button>
+            </div>
           </div>
-          <ol class="history" id="history">
-            <li class="history-empty">No spins yet.</li>
+          <ol class="challenge-list" id="challengeList">
+            <li class="history-empty">No active effects.</li>
           </ol>
         </div>
 
-        <div class="reset-row">
-          <button id="resetWheelButton" class="reset-button" type="button">RESET WHEEL</button>
-          <div>Restores every previously selected outcome.</div>
-        </div>
-
-        <div class="panel-footer">
-          <span><kbd>SPACE</kbd> spin</span>
-          <span><kbd>F</kbd> fullscreen</span>
-          <span><kbd>R</kbd> reset wheel</span>
-        </div>
       </aside>
+    </section>
+
+    <section class="boss-tracker" id="trackerView" hidden>
+      <header class="tracker-header">
+        <div>
+          <div class="eyebrow">BOSS RUN</div>
+          <h2>BOSS TRACKER</h2>
+        </div>
+        <div class="tracker-filters" aria-label="Boss types to include">
+          <label><input id="includeWorldBosses" type="checkbox" checked /> WORLD BOSSES</label>
+          <label><input id="includeWeeklyBosses" type="checkbox" checked /> WEEKLY BOSSES</label>
+        </div>
+      </header>
+      <div class="tracker-grid">
+        <article class="boss-card" id="currentBossCard">
+          <div class="boss-art" id="currentBossArt"><span>?</span></div>
+          <div class="boss-card-content">
+            <div class="boss-type" id="currentBossType">WORLD BOSS</div>
+            <h3 id="currentBossName">CHOOSE A BOSS TYPE</h3>
+            <p id="currentBossMeta">Enable World Bosses and/or Weekly Bosses to begin.</p>
+            <div class="boss-card-actions">
+              <button id="bossDefeatedButton" class="boss-action boss-action-win" type="button">DEFEATED</button>
+              <button id="bossLostButton" class="boss-action" type="button">LOST</button>
+              <button id="clearBossResultButton" class="boss-action" type="button">CLEAR MARK</button>
+              <button id="nextBossButton" class="boss-action" type="button">NEXT BOSS</button>
+            </div>
+          </div>
+        </article>
+        <aside class="tracker-side">
+          <div class="tracker-stats">
+            <div><span>DEFEATED</span><strong id="bossDefeatedCount">00</strong></div>
+            <div><span>LOST</span><strong id="bossLostCount">00</strong></div>
+            <div><span>LEFT</span><strong id="bossRemainingCount">00</strong></div>
+          </div>
+          <section class="tracker-challenges">
+            <div class="panel-heading-row"><div class="panel-label">ACTIVE EFFECTS</div><button id="trackerClearChallengesButton" class="text-button" type="button">CLEAR FOR NEXT BOSS</button></div>
+            <ol class="challenge-list" id="trackerChallengeList"><li class="history-empty">No active effects.</li></ol>
+          </section>
+          <section class="boss-log-section">
+            <div class="panel-label">BOSS LOG</div>
+            <ol class="boss-log" id="bossLog"><li class="history-empty">No bosses recorded.</li></ol>
+          </section>
+        </aside>
+      </div>
+      <section class="boss-overview-section">
+        <div class="panel-heading-row"><div class="panel-label">HANDBOOK ORDER</div><div class="overview-key"><span><b class="overview-symbol is-win">✓</b> defeated</span><span><b class="overview-symbol is-lost">×</b> lost</span></div></div>
+        <p class="boss-overview-copy">World Bosses follow the Adventurer Handbook’s Boss Enemies order. Weekly Bosses are listed separately in release order, beginning with Dvalin.</p>
+        <div class="boss-overview" id="bossOverview"></div>
+      </section>
     </section>
   </main>
 
   <div class="result-flash" id="resultFlash" aria-hidden="true"></div>
+  <div class="route-overlay" id="routeOverlay" aria-live="assertive" hidden>
+    <div class="route-overlay-card">
+      <div class="route-overlay-kicker" id="routeOverlayKicker"></div>
+      <div class="route-overlay-title" id="routeOverlayTitle"></div>
+      <div class="route-overlay-meta" id="routeOverlayMeta"></div>
+    </div>
+  </div>
+  <div class="outcome-modal" id="outcomeModal" role="dialog" aria-modal="true" aria-labelledby="outcomeModalTitle" hidden>
+    <div class="outcome-modal-card">
+      <div class="outcome-modal-kicker" id="outcomeModalKicker">YOUR RESULT</div>
+      <img class="outcome-modal-portrait" id="outcomeModalPortrait" alt="" hidden />
+      <h2 id="outcomeModalTitle" class="outcome-modal-title"></h2>
+      <p class="outcome-modal-meta" id="outcomeModalMeta"></p>
+      <div class="outcome-modal-actions">
+        <button id="keepOutcomeButton" class="outcome-button" type="button">KEEP</button>
+        <button id="removeOutcomeButton" class="outcome-button outcome-button-remove" type="button">REMOVE</button>
+      </div>
+    </div>
+  </div>
+  <div class="lottery-modal" id="lotteryModal" role="dialog" aria-modal="true" aria-labelledby="lotteryTitle" hidden>
+    <div class="lottery-card">
+      <div class="lottery-kicker" id="lotteryKicker">RESULT DRAW</div>
+      <h2 id="lotteryTitle" class="lottery-title"></h2>
+      <div class="lottery-window" aria-live="polite">
+        <div class="lottery-reel" id="lotteryReel"></div>
+        <div class="lottery-marker" aria-hidden="true"></div>
+      </div>
+      <button id="lotteryStopButton" class="lottery-stop-button" type="button">STOP</button>
+    </div>
+  </div>
+  <div class="picker-modal" id="undoChallengeModal" role="dialog" aria-modal="true" aria-labelledby="undoChallengeTitle" hidden>
+    <div class="picker-card undo-challenge-card">
+      <div class="picker-heading-row">
+        <div>
+          <div class="picker-kicker">BLESSING</div>
+          <h2 id="undoChallengeTitle">UNDO A CHALLENGE</h2>
+        </div>
+        <button id="undoChallengeClose" class="text-button" type="button">CANCEL</button>
+      </div>
+      <p class="picker-copy">Choose one active challenge to remove permanently from the active HUD.</p>
+      <div class="undo-challenge-list" id="undoChallengeList"></div>
+    </div>
+  </div>
+  <div class="picker-modal" id="bossActionsModal" role="dialog" aria-modal="true" aria-labelledby="bossActionsTitle" hidden>
+    <div class="picker-card boss-actions-card">
+      <div class="picker-heading-row"><div><div class="picker-kicker" id="bossActionsType">CURRENT BOSS</div><h2 id="bossActionsTitle">CHOOSE A BOSS</h2></div><button id="bossActionsClose" class="text-button" type="button">CLOSE</button></div>
+      <p class="picker-copy" id="bossActionsCopy">Use the Boss Tracker to choose your next fight.</p>
+      <div class="boss-card-actions">
+        <label class="boss-choice-control"><span>CHOOSE ANOTHER BOSS</span><select id="bossActionSelect" aria-label="Choose another boss"></select></label>
+        <button id="modalBossChoose" class="boss-action" type="button">USE THIS BOSS</button>
+        <button id="modalBossNext" class="boss-action" type="button">NEXT BOSS</button>
+        <button id="modalBossDefeated" class="boss-action boss-action-win" type="button">MARK DEFEATED</button>
+        <button id="modalBossLost" class="boss-action" type="button">MARK LOST</button>
+        <button id="modalBossClear" class="boss-action" type="button">CLEAR MARK</button>
+      </div>
+    </div>
+  </div>
+  <div class="picker-modal" id="characterPickerModal" role="dialog" aria-modal="true" aria-labelledby="characterPickerTitle" hidden>
+    <div class="picker-card">
+      <div class="picker-heading-row">
+        <div>
+          <div class="picker-kicker">FATE SETUP</div>
+          <h2 id="characterPickerTitle">CHOOSE YOUR CHARACTER</h2>
+        </div>
+        <button id="characterPickerClose" class="text-button" type="button">CLOSE</button>
+      </div>
+      <p class="picker-copy">This character sets the weapon type used by the weapon punishments.</p>
+      <div class="character-picker-groups" id="characterPickerGroups"></div>
+    </div>
+  </div>
+  <div class="picker-modal" id="rosterModal" role="dialog" aria-modal="true" aria-labelledby="rosterModalTitle" hidden>
+    <div class="picker-card roster-card">
+      <div class="picker-heading-row">
+        <div>
+          <div class="picker-kicker">SETTINGS</div>
+          <h2 id="rosterModalTitle">YOUR CHARACTER ROSTER</h2>
+        </div>
+        <button id="rosterCancelButton" class="text-button" type="button">CANCEL</button>
+      </div>
+      <p class="picker-copy">Everything starts enabled. Click a portrait to dim it, then save; dimmed characters and weapons never appear in the relevant random result.</p>
+      <div class="character-picker-groups" id="rosterGroups"></div>
+      <div class="inventory-divider"><span>LOW-RARITY WEAPONS</span></div>
+      <div class="character-picker-groups" id="rosterWeaponGroups"></div>
+      <div class="picker-actions">
+        <button id="rosterSaveButton" class="lottery-stop-button" type="button">SAVE ROSTER</button>
+      </div>
+    </div>
+  </div>
 
   <script src="wheel-data.js"></script>
+  <script src="character-data.js"></script>
+  <script src="weapon-data.js"></script>
+  <script src="boss-data.js"></script>
+  <script src="boss-matchup-data.js"></script>
   <script src="app.js"></script>
-<div style="position:fixed;right:10px;bottom:8px;font:600 10px Bahnschrift,Arial Narrow,sans-serif;letter-spacing:.12em;opacity:.22;pointer-events:none">EQUAL / NO REPEAT · V2</div>
 </body>
 </html>
