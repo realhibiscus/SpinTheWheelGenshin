@@ -8,7 +8,16 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 6,
     "icon": "UI_MonsterIcon_Effigy_Electric",
     "portrait": "assets/bosses/UI_MonsterIcon_Effigy_Electric.png",
-    "resistances": null
+    "resistances": {
+      "Pyro": 10,
+      "Hydro": 10,
+      "Cryo": 10,
+      "Electro": 100,
+      "Anemo": 10,
+      "Geo": 10,
+      "Dendro": 10,
+      "Physical": 10
+    }
   },
   {
     "id": "20040201",
@@ -284,7 +293,16 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 39,
     "icon": "UI_MonsterIcon_Nithhoggr_None",
     "portrait": "assets/bosses/UI_MonsterIcon_Nithhoggr_None.png",
-    "resistances": null
+    "resistances": {
+      "Pyro": 10,
+      "Hydro": 10,
+      "Cryo": 10,
+      "Electro": 10,
+      "Anemo": 10,
+      "Geo": 10,
+      "Dendro": 10,
+      "Physical": 70
+    }
   },
   {
     "id": "26020301",
@@ -332,7 +350,16 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 46,
     "icon": "UI_MonsterIcon_Gargoyle_Fafnir",
     "portrait": "assets/bosses/UI_MonsterIcon_Gargoyle_Fafnir.png",
-    "resistances": null
+    "resistances": {
+      "Pyro": 10,
+      "Hydro": 10,
+      "Cryo": 10,
+      "Electro": 10,
+      "Anemo": 10,
+      "Geo": 10,
+      "Dendro": 10,
+      "Physical": 70
+    }
   },
   {
     "id": "24050101",
@@ -361,7 +388,16 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 49,
     "icon": "UI_MonsterIcon_Effigy_Grass",
     "portrait": "assets/bosses/UI_MonsterIcon_Effigy_Grass.png",
-    "resistances": null
+    "resistances": {
+      "Pyro": 10,
+      "Hydro": 10,
+      "Cryo": 10,
+      "Electro": 10,
+      "Anemo": 10,
+      "Geo": 10,
+      "Dendro": 10,
+      "Physical": 10
+    }
   },
   {
     "id": "26130101",
@@ -390,7 +426,16 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 53,
     "icon": "UI_MonsterIcon_Invoker_Archdeacon",
     "portrait": "assets/bosses/UI_MonsterIcon_Invoker_Archdeacon.png",
-    "resistances": null
+    "resistances": {
+      "Pyro": 10,
+      "Hydro": 10,
+      "Cryo": 10,
+      "Electro": 10,
+      "Anemo": 10,
+      "Geo": 10,
+      "Dendro": 10,
+      "Physical": 10
+    }
   },
   {
     "id": "24070301-coppelia",
@@ -419,7 +464,16 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 58.1,
     "icon": "UI_MonsterIcon_MachinaIustitia_Nutcracker",
     "portrait": "assets/bosses/UI_MonsterIcon_MachinaIustitia_Nutcracker.png",
-    "resistances": null
+    "resistances": {
+      "Pyro": 10,
+      "Hydro": 10,
+      "Cryo": 70,
+      "Electro": 10,
+      "Anemo": 70,
+      "Geo": 10,
+      "Dendro": 10,
+      "Physical": 10
+    }
   },
   {
     "id": "26160302",
@@ -429,7 +483,16 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 59,
     "icon": "UI_MonsterIcon_HermitCrab_Primo",
     "portrait": "assets/bosses/UI_MonsterIcon_HermitCrab_Primo.png",
-    "resistances": null
+    "resistances": {
+      "Pyro": 60,
+      "Hydro": 10,
+      "Cryo": 10,
+      "Electro": 10,
+      "Anemo": 10,
+      "Geo": 10,
+      "Dendro": 10,
+      "Physical": 10
+    }
   },
   {
     "id": "24080101",
@@ -439,7 +502,16 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 61,
     "icon": "UI_MonsterIcon_MachinaIustitia_Gravitas",
     "portrait": "assets/bosses/UI_MonsterIcon_MachinaIustitia_Gravitas.png",
-    "resistances": null
+    "resistances": {
+      "Pyro": 10,
+      "Hydro": 10,
+      "Cryo": 10,
+      "Electro": 10,
+      "Anemo": 10,
+      "Geo": 70,
+      "Dendro": 10,
+      "Physical": 10
+    }
   },
   {
     "id": "26180101",
@@ -449,7 +521,16 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 62,
     "icon": "UI_MonsterIcon_SeaHorse_Primo_Electric",
     "portrait": "assets/bosses/UI_MonsterIcon_SeaHorse_Primo_Electric.png",
-    "resistances": null
+    "resistances": {
+      "Pyro": 10,
+      "Hydro": 10,
+      "Cryo": 10,
+      "Electro": 60,
+      "Anemo": 10,
+      "Geo": 10,
+      "Dendro": 10,
+      "Physical": 10
+    }
   },
   {
     "id": "20051201",
@@ -478,7 +559,16 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 64,
     "icon": "UI_MonsterIcon_Hermit",
     "portrait": "assets/bosses/UI_MonsterIcon_Hermit.png",
-    "resistances": null
+    "resistances": {
+      "Pyro": 10,
+      "Hydro": 70,
+      "Cryo": 10,
+      "Electro": 10,
+      "Anemo": 70,
+      "Geo": 10,
+      "Dendro": 10,
+      "Physical": 10
+    }
   },
   {
     "id": "26140101",
@@ -526,7 +616,16 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 69,
     "icon": "UI_MonsterIcon_Natsaurus_Flamingo_Primo",
     "portrait": "assets/bosses/UI_MonsterIcon_Natsaurus_Flamingo_Primo.png",
-    "resistances": null
+    "resistances": {
+      "Pyro": 70,
+      "Hydro": 10,
+      "Cryo": 10,
+      "Electro": 10,
+      "Anemo": 10,
+      "Geo": 10,
+      "Dendro": 10,
+      "Physical": 10
+    }
   },
   {
     "id": "24090201",
@@ -612,7 +711,16 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 81,
     "icon": "UI_MonsterIcon_DragonCollar",
     "portrait": "assets/bosses/UI_MonsterIcon_DragonCollar.png",
-    "resistances": null
+    "resistances": {
+      "Pyro": 10,
+      "Hydro": 10,
+      "Cryo": 10,
+      "Electro": 10,
+      "Anemo": 10,
+      "Geo": 10,
+      "Dendro": 10,
+      "Physical": 10
+    }
   },
   {
     "id": "24100101",
@@ -622,7 +730,16 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 87,
     "icon": "UI_MonsterIcon_Gastrobot_01",
     "portrait": "assets/bosses/UI_MonsterIcon_Gastrobot_01.png",
-    "resistances": null
+    "resistances": {
+      "Pyro": 10,
+      "Hydro": 10,
+      "Cryo": 10,
+      "Electro": 10,
+      "Anemo": 10,
+      "Geo": 10,
+      "Dendro": 10,
+      "Physical": 10
+    }
   },
   {
     "id": "26301101",
@@ -670,7 +787,16 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 90,
     "icon": "UI_MonsterIcon_Fatuimecha_AMP",
     "portrait": "assets/bosses/UI_MonsterIcon_Fatuimecha_AMP.png",
-    "resistances": null
+    "resistances": {
+      "Pyro": 10,
+      "Hydro": 10,
+      "Cryo": 10,
+      "Electro": 10,
+      "Anemo": 10,
+      "Geo": 10,
+      "Dendro": 10,
+      "Physical": 10
+    }
   },
   {
     "id": "22150101",
@@ -756,7 +882,16 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 98,
     "icon": "UI_MonsterIcon_Chimera_Manticore",
     "portrait": "assets/bosses/UI_MonsterIcon_Chimera_Manticore.png",
-    "resistances": null
+    "resistances": {
+      "Pyro": 10,
+      "Hydro": 10,
+      "Cryo": 10,
+      "Electro": 50,
+      "Anemo": 50,
+      "Geo": 10,
+      "Dendro": 10,
+      "Physical": 10
+    }
   },
   {
     "id": "29090101",
@@ -766,7 +901,16 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": null,
     "icon": "UI_MonsterIcon_Ptahur_Devourer",
     "portrait": "assets/bosses/UI_MonsterIcon_Ptahur_Devourer.png",
-    "resistances": null
+    "resistances": {
+      "Pyro": 10,
+      "Hydro": 70,
+      "Cryo": 10,
+      "Electro": 10,
+      "Anemo": 10,
+      "Geo": 10,
+      "Dendro": 10,
+      "Physical": 10
+    }
   },
   {
     "id": "29040101",
@@ -795,7 +939,16 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": null,
     "icon": "UI_MonsterIcon_Tartaglia",
     "portrait": "assets/bosses/UI_MonsterIcon_Tartaglia.png",
-    "resistances": null
+    "resistances": {
+      "Pyro": 10,
+      "Hydro": 70,
+      "Cryo": 10,
+      "Electro": 70,
+      "Anemo": 10,
+      "Geo": 10,
+      "Dendro": 10,
+      "Physical": 10
+    }
   },
   {
     "id": "29080101",
@@ -805,7 +958,16 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": null,
     "icon": "UI_MonsterIcon_Apep",
     "portrait": "assets/bosses/UI_MonsterIcon_Apep.png",
-    "resistances": null
+    "resistances": {
+      "Pyro": 10,
+      "Hydro": 10,
+      "Cryo": 10,
+      "Electro": 10,
+      "Anemo": 10,
+      "Geo": 10,
+      "Dendro": 70,
+      "Physical": 10
+    }
   },
   {
     "id": "29150101",
@@ -853,7 +1015,16 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": null,
     "icon": "UI_MonsterIcon_TheAbyssXiuhcoatl",
     "portrait": "assets/bosses/UI_MonsterIcon_TheAbyssXiuhcoatl.png",
-    "resistances": null
+    "resistances": {
+      "Pyro": 10,
+      "Hydro": 10,
+      "Cryo": 10,
+      "Electro": 10,
+      "Anemo": 10,
+      "Geo": 10,
+      "Dendro": 10,
+      "Physical": 10
+    }
   },
   {
     "id": "29020101",
@@ -863,7 +1034,16 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": null,
     "icon": "UI_MonsterIcon_LupiBoreas",
     "portrait": "assets/bosses/UI_MonsterIcon_LupiBoreas.png",
-    "resistances": null
+    "resistances": {
+      "Pyro": 10,
+      "Hydro": 10,
+      "Cryo": 50,
+      "Electro": 10,
+      "Anemo": 30,
+      "Geo": 10,
+      "Dendro": 10,
+      "Physical": 10
+    }
   },
   {
     "id": "29060201",
@@ -892,7 +1072,16 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": null,
     "icon": "UI_MonsterIcon_Nada",
     "portrait": "assets/bosses/UI_MonsterIcon_Nada.png",
-    "resistances": null
+    "resistances": {
+      "Pyro": 30,
+      "Hydro": 30,
+      "Cryo": 30,
+      "Electro": 90,
+      "Anemo": 30,
+      "Geo": 30,
+      "Dendro": 30,
+      "Physical": 30
+    }
   },
   {
     "id": "29010101",
@@ -921,7 +1110,16 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": null,
     "icon": "UI_MonsterIcon_Dotorre_Moon",
     "portrait": "assets/bosses/UI_MonsterIcon_Dotorre_Moon.png",
-    "resistances": null
+    "resistances": {
+      "Pyro": 10,
+      "Hydro": 10,
+      "Cryo": 10,
+      "Electro": 10,
+      "Anemo": 10,
+      "Geo": 10,
+      "Dendro": 10,
+      "Physical": 10
+    }
   },
   {
     "id": "29122000",
@@ -931,7 +1129,16 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": null,
     "icon": "UI_MonsterIcon_GiantChess",
     "portrait": "assets/bosses/UI_MonsterIcon_GiantChess.png",
-    "resistances": null
+    "resistances": {
+      "Pyro": 10,
+      "Hydro": 70,
+      "Cryo": 10,
+      "Electro": 70,
+      "Anemo": 10,
+      "Geo": 10,
+      "Dendro": 10,
+      "Physical": 10
+    }
   },
   {
     "id": "29091001",

@@ -35,6 +35,7 @@
   const currentBossType = document.getElementById('currentBossType');
   const currentBossName = document.getElementById('currentBossName');
   const currentBossMeta = document.getElementById('currentBossMeta');
+  const bossIntelButton = document.getElementById('bossIntelButton');
   const bossDefeatedButton = document.getElementById('bossDefeatedButton');
   const bossLostButton = document.getElementById('bossLostButton');
   const clearBossResultButton = document.getElementById('clearBossResultButton');
@@ -50,6 +51,8 @@
   const wheelBossPortrait = document.getElementById('wheelBossPortrait');
   const wheelBossType = document.getElementById('wheelBossType');
   const wheelBossName = document.getElementById('wheelBossName');
+  const wheelBossMatchup = document.getElementById('wheelBossMatchup');
+  const activeCharacterElement = document.getElementById('activeCharacterElement');
   const bossActionsModal = document.getElementById('bossActionsModal');
   const bossActionsType = document.getElementById('bossActionsType');
   const bossActionsTitle = document.getElementById('bossActionsTitle');
@@ -57,10 +60,20 @@
   const bossActionsClose = document.getElementById('bossActionsClose');
   const bossActionSelect = document.getElementById('bossActionSelect');
   const modalBossChoose = document.getElementById('modalBossChoose');
+  const modalBossIntel = document.getElementById('modalBossIntel');
   const modalBossNext = document.getElementById('modalBossNext');
   const modalBossDefeated = document.getElementById('modalBossDefeated');
   const modalBossLost = document.getElementById('modalBossLost');
   const modalBossClear = document.getElementById('modalBossClear');
+  const bossIntelModal = document.getElementById('bossIntelModal');
+  const bossIntelType = document.getElementById('bossIntelType');
+  const bossIntelTitle = document.getElementById('bossIntelTitle');
+  const bossIntelClose = document.getElementById('bossIntelClose');
+  const bossIntelPortrait = document.getElementById('bossIntelPortrait');
+  const bossIntelOverview = document.getElementById('bossIntelOverview');
+  const bossIntelDanger = document.getElementById('bossIntelDanger');
+  const bossIntelAbilities = document.getElementById('bossIntelAbilities');
+  const bossIntelTips = document.getElementById('bossIntelTips');
   const statusStrip = document.getElementById('statusStrip');
   const resultFlash = document.getElementById('resultFlash');
   const routeOverlay = document.getElementById('routeOverlay');
@@ -112,6 +125,8 @@
   const characterCatalog = Array.isArray(window.GENSHIN_CHARACTERS) ? window.GENSHIN_CHARACTERS : [];
   const weaponCatalog = Array.isArray(window.GENSHIN_WEAPONS) ? window.GENSHIN_WEAPONS : [];
   const bossCatalog = Array.isArray(window.GENSHIN_BOSSES) ? window.GENSHIN_BOSSES : [];
+  const bossTips = window.GENSHIN_BOSS_TIPS || {};
+  const bossIntel = window.GENSHIN_BOSS_INTEL || {};
   const handbookOrderOverrides = new Map([
     ['Bolteater Bathysmal Vishap', 38]
   ]);
@@ -122,6 +137,9 @@
     WEAPON_BOW: 'Bow',
     WEAPON_CATALYST: 'Catalyst'
   };
+  const elementIconPaths = Object.fromEntries(['Anemo', 'Cryo', 'Dendro', 'Electro', 'Geo', 'Hydro', 'Pyro'].map(element => [element, `assets/elements/${element.toLowerCase()}.svg`]));
+  const elementGlyphs = { Physical: 'PHY' };
+  const weaponIconPaths = Object.fromEntries(['Sword', 'Claymore', 'Bow', 'Catalyst', 'Polearm'].map(weapon => [weapon, `assets/weapon-types/${weapon.toLowerCase()}.png`]));
 
   let currentWheelKey = 'fate';
   let activeItems = [];
@@ -267,6 +285,9 @@
     if (!character) {
       activeCharacterPortrait.hidden = true;
       activeCharacterPortrait.removeAttribute('src');
+      activeCharacterElement.hidden = true;
+      activeCharacterElement.removeAttribute('src');
+      activeCharacterButton.removeAttribute('data-element');
       activeCharacterName.textContent = 'CHOOSE CHARACTER';
       activeCharacterWeapon.textContent = 'PICK ONE BEFORE SPINNING FATE';
       return;
@@ -274,8 +295,12 @@
     activeCharacterPortrait.src = character.portrait;
     activeCharacterPortrait.alt = character.name;
     activeCharacterPortrait.hidden = false;
+    const elementIcon = elementIconPath(character.element);
+    activeCharacterElement.hidden = !elementIcon;
+    if (elementIcon) activeCharacterElement.src = elementIcon;
+    activeCharacterButton.dataset.element = character.element || '';
     activeCharacterName.textContent = character.name;
-    activeCharacterWeapon.textContent = weaponTypeLabel(character.weaponType).toUpperCase();
+    activeCharacterWeapon.textContent = [weaponTypeLabel(character.weaponType), character.element].filter(Boolean).join(' · ').toUpperCase();
   }
 
   function rng() {
@@ -502,13 +527,14 @@
     const disabled = !boss;
     bossDefeatedButton.disabled = disabled;
     bossLostButton.disabled = disabled;
+    bossIntelButton.disabled = disabled;
     clearBossResultButton.disabled = disabled || !bossTracker.results[boss.id];
     nextBossButton.disabled = !bosses.length;
     bossLog.innerHTML = bossTracker.log.length ? bossTracker.log.slice(0, 10).map(entry => `<li><span class="boss-log-status ${entry.status}">${entry.status === 'defeated' ? 'DEFEATED' : 'LOST'}</span><span>${escapeHtml(entry.name)}</span></li>`).join('') : '<li class="history-empty">No bosses recorded.</li>';
     renderTrackerChallenges();
     const renderOverviewGroup = (groupBosses, heading, type) => groupBosses.length ? `<section class="boss-overview-group"><h3>${heading}</h3><div class="boss-overview-grid">${groupBosses.map((entry, index) => {
       const status = bossTracker.results[entry.id] || '';
-      return `<button class="boss-overview-card${entry.id === boss?.id ? ' is-current' : ''}${status ? ` is-${status}` : ''}" type="button" data-boss-id="${escapeHtml(entry.id)}"><span class="boss-overview-number">${String(index + 1).padStart(2, '0')}</span><img src="${escapeHtml(entry.portrait)}" alt="" onerror="this.remove()" /><span class="boss-overview-name"><small>${type}</small><strong>${escapeHtml(entry.name)}</strong></span><b class="boss-overview-status" aria-label="${status || 'not marked'}">${status === 'defeated' ? '✓' : status === 'lost' ? '×' : ''}</b></button>`;
+      return `<div class="boss-overview-card${entry.id === boss?.id ? ' is-current' : ''}${status ? ` is-${status}` : ''}"><button class="boss-overview-select" type="button" data-boss-id="${escapeHtml(entry.id)}"><span class="boss-overview-number">${String(index + 1).padStart(2, '0')}</span><img src="${escapeHtml(entry.portrait)}" alt="" onerror="this.remove()" /><span class="boss-overview-name"><small>${type}</small><strong>${escapeHtml(entry.name)}</strong></span><b class="boss-overview-status" aria-label="${status || 'not marked'}">${status === 'defeated' ? '✓' : status === 'lost' ? '×' : ''}</b></button><button class="boss-overview-intel" type="button" data-boss-intel="${escapeHtml(entry.id)}" aria-label="Open boss intel for ${escapeHtml(entry.name)}">INTEL</button></div>`;
     }).join('')}</div></section>` : '';
     bossOverview.innerHTML = renderOverviewGroup(bosses.filter(entry => entry.type === 'world'), 'WORLD BOSSES · HANDBOOK ORDER', 'WORLD') + renderOverviewGroup(bosses.filter(entry => entry.type === 'weekly'), 'WEEKLY BOSSES · RELEASE ORDER', 'WEEKLY') || '<p class="history-empty">Enable World Bosses and/or Weekly Bosses to see the handbook.</p>';
     renderWheelBoss();
@@ -521,12 +547,55 @@
       wheelBossPortrait.removeAttribute('src');
       wheelBossType.textContent = selectedBosses().length ? 'NO BOSS SELECTED' : 'CHOOSE BOSS TYPE';
       wheelBossName.textContent = selectedBosses().length ? 'OPEN BOSS TRACKER' : 'CHOOSE BOSS TYPE';
+      wheelBossMatchup.innerHTML = '';
       return;
     }
     wheelBossPortrait.src = boss.portrait;
     wheelBossPortrait.hidden = false;
     wheelBossType.textContent = boss.type === 'weekly' ? 'WEEKLY BOSS' : 'WORLD BOSS';
     wheelBossName.textContent = boss.name;
+    wheelBossMatchup.innerHTML = bossMatchupHtml(boss);
+  }
+
+  function matchupSigil(kind, label) {
+    const iconPath = kind === 'element' ? elementIconPath(label) : weaponIconPaths[label] || '';
+    if (iconPath) return `<img class="matchup-sigil matchup-${kind} matchup-${label.toLowerCase()}" src="${iconPath}" alt="${escapeHtml(label)}" title="${escapeHtml(label)}" />`;
+    return `<span class="matchup-sigil matchup-${kind} matchup-${label.toLowerCase()}" aria-label="${escapeHtml(label)}" title="${escapeHtml(label)}">${elementGlyphs[label] || escapeHtml(label)}</span>`;
+  }
+
+  function elementIconPath(element) {
+    return elementIconPaths[element] || '';
+  }
+
+  function bossMatchupHtml(boss) {
+    const resistances = Object.entries(boss.resistances || {})
+      .filter(([, value]) => Number(value) >= 50)
+      .sort(([, left], [, right]) => Number(right) - Number(left))
+      .slice(0, 1);
+    const tip = bossTips[boss.name] || {};
+    const resistanceItems = resistances.map(([element, value]) => {
+      const resistanceLabel = Number(value) >= 100 ? 'IMMUNE' : `${value}% RES`;
+      if (element === 'Physical') return `<span class="matchup-resistance matchup-resistance-text"><b>PHYSICAL ${resistanceLabel}</b></span>`;
+      return `<span class="matchup-resistance">${matchupSigil('element', element)}<b>${resistanceLabel}</b></span>`;
+    }).join('');
+    const resistanceHtml = resistanceItems ? `<span class="matchup-resistances">${resistanceItems}</span>` : '';
+    const recommendedElements = (tip.elements || []).map(element => `<span class="matchup-up">${matchupSigil('element', element)}</span>`).join('');
+    const recommendedWeapons = (tip.weapons || []).map(weapon => `<span class="matchup-up">${matchupSigil('weapon', weapon)}</span>`).join('');
+    const advice = recommendedElements || recommendedWeapons
+      ? `<span class="matchup-advantages" title="${escapeHtml(tip.note || 'Boss mechanic advantage')}">${recommendedElements}${recommendedWeapons}<b class="matchup-kind">GOOD</b></span>`
+      : '';
+    const mechanicElements = (tip.recommendedElements || []).map(element => `<span class="matchup-recommended-item">${matchupSigil('element', element)}</span>`).join('');
+    const recommendation = mechanicElements
+      ? `<span class="matchup-recommended" title="${escapeHtml(tip.note || 'Recommended for this boss mechanic')}">${mechanicElements}<b>RECOMMENDED</b></span>`
+      : '';
+    const note = tip.note ? `<span class="matchup-note">${escapeHtml(tip.note)}</span>` : '';
+    const rowClasses = ['boss-matchup-row'];
+    if (!resistanceHtml) rowClasses.push('boss-matchup-no-resistance');
+    if (!advice) rowClasses.push('boss-matchup-no-good');
+    const chips = resistanceHtml || advice || recommendation
+      ? `<span class="${rowClasses.join(' ')}">${resistanceHtml}${advice}${recommendation}</span>`
+      : '';
+    return chips || note ? `${chips}${note}` : '';
   }
 
   function openBossActions() {
@@ -541,6 +610,7 @@
     modalBossDefeated.disabled = !boss;
     modalBossLost.disabled = !boss;
     modalBossClear.disabled = !boss || !bossTracker.results[boss.id];
+    modalBossIntel.disabled = !boss;
     bossActionSelect.disabled = !choices.length;
     modalBossChoose.disabled = !choices.length;
     modalBossNext.disabled = !choices.length;
@@ -548,6 +618,32 @@
   }
 
   function closeBossActions() { bossActionsModal.hidden = true; }
+
+  function openBossIntel(bossId = bossTracker.currentId) {
+    const boss = bossCatalog.find(entry => entry.id === String(bossId));
+    if (!boss) return;
+    const data = bossIntel[boss.name] || {
+      overview: 'Encounter notes are not available for this boss yet.',
+      danger: 'Watch its attack indicators and preserve stamina for major attacks.',
+      abilities: [],
+      tips: ['Observe the first attack cycle before committing your full rotation.']
+    };
+    bossIntelType.textContent = boss.type === 'weekly' ? 'WEEKLY BOSS INTEL' : 'WORLD BOSS INTEL';
+    bossIntelTitle.textContent = boss.name;
+    bossIntelPortrait.src = boss.portrait;
+    bossIntelPortrait.alt = `${boss.name} portrait`;
+    bossIntelOverview.textContent = data.overview;
+    bossIntelDanger.textContent = data.danger;
+    bossIntelAbilities.innerHTML = data.abilities.map(([name, description]) => `<li><strong>${escapeHtml(name)}</strong><p>${escapeHtml(description)}</p></li>`).join('');
+    bossIntelTips.innerHTML = data.tips.map((tip, index) => `<li><span>${String(index + 1).padStart(2, '0')}</span><p>${escapeHtml(tip)}</p></li>`).join('');
+    bossIntelModal.hidden = false;
+    document.body.classList.add('modal-open');
+  }
+
+  function closeBossIntel() {
+    bossIntelModal.hidden = true;
+    document.body.classList.remove('modal-open');
+  }
 
   function switchView(view) {
     const tracker = view === 'tracker';
@@ -1231,12 +1327,18 @@
   bossLostButton.addEventListener('click', () => finishBoss('lost'));
   clearBossResultButton.addEventListener('click', clearBossResult);
   bossOverview.addEventListener('click', (event) => {
+    const intelControl = event.target.closest('[data-boss-intel]');
+    if (intelControl) {
+      openBossIntel(intelControl.dataset.bossIntel);
+      return;
+    }
     const card = event.target.closest('[data-boss-id]');
     if (!card) return;
     bossTracker.currentId = card.dataset.bossId;
     persistBossTracker();
     renderBossTracker();
   });
+  bossIntelButton.addEventListener('click', () => openBossIntel());
   wheelBossCard.addEventListener('click', openBossActions);
   bossActionsClose.addEventListener('click', closeBossActions);
   modalBossChoose.addEventListener('click', () => {
@@ -1245,6 +1347,15 @@
     persistBossTracker();
     renderBossTracker();
     closeBossActions();
+  });
+  modalBossIntel.addEventListener('click', () => {
+    const bossId = bossActionSelect.value || bossTracker.currentId;
+    closeBossActions();
+    openBossIntel(bossId);
+  });
+  bossIntelClose.addEventListener('click', closeBossIntel);
+  bossIntelModal.addEventListener('click', (event) => {
+    if (event.target === bossIntelModal) closeBossIntel();
   });
   modalBossNext.addEventListener('click', () => {
     chooseNextBoss();
@@ -1295,13 +1406,14 @@
 
   document.addEventListener('keydown', (event) => {
     if (event.repeat) return;
-    if (!characterPickerModal.hidden || !rosterModal.hidden || !undoChallengeModal.hidden || !bossActionsModal.hidden) {
+    if (!characterPickerModal.hidden || !rosterModal.hidden || !undoChallengeModal.hidden || !bossActionsModal.hidden || !bossIntelModal.hidden) {
       if (event.key === 'Escape') {
         const undoWasOpen = !undoChallengeModal.hidden;
         closeCharacterPicker();
         closeRosterSettings();
         closeUndoChallengePicker();
         closeBossActions();
+        closeBossIntel();
         if (undoWasOpen) returnToFate();
       }
       return;

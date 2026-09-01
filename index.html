@@ -62,6 +62,7 @@
           </div>
           <button id="activeCharacterButton" class="active-character" type="button">
             <img id="activeCharacterPortrait" alt="" hidden />
+            <img id="activeCharacterElement" class="active-character-element" alt="" hidden />
             <span>
               <strong id="activeCharacterName">CHOOSE CHARACTER</strong>
               <small id="activeCharacterWeapon">PICK ONE BEFORE SPINNING FATE</small>
@@ -116,6 +117,7 @@
             <h3 id="currentBossName">CHOOSE A BOSS TYPE</h3>
             <p id="currentBossMeta">Enable World Bosses and/or Weekly Bosses to begin.</p>
             <div class="boss-card-actions">
+              <button id="bossIntelButton" class="boss-action boss-action-intel" type="button">BOSS INTEL</button>
               <button id="bossDefeatedButton" class="boss-action boss-action-win" type="button">DEFEATED</button>
               <button id="bossLostButton" class="boss-action" type="button">LOST</button>
               <button id="clearBossResultButton" class="boss-action" type="button">CLEAR MARK</button>
@@ -141,7 +143,7 @@
       </div>
       <section class="boss-overview-section">
         <div class="panel-heading-row"><div class="panel-label">HANDBOOK ORDER</div><div class="overview-key"><span><b class="overview-symbol is-win">✓</b> defeated</span><span><b class="overview-symbol is-lost">×</b> lost</span></div></div>
-        <p class="boss-overview-copy">World Bosses follow the Adventurer Handbook’s Boss Enemies order. Weekly Bosses are listed separately in release order, beginning with Dvalin.</p>
+        <p class="boss-overview-copy">World Bosses follow the Adventurer Handbook’s Boss Enemies order. Weekly Bosses are listed separately in release order, beginning with Dvalin. Open INTEL for signature abilities and a quick win plan.</p>
         <div class="boss-overview" id="bossOverview"></div>
       </section>
     </section>
@@ -198,10 +200,46 @@
       <div class="boss-card-actions">
         <label class="boss-choice-control"><span>CHOOSE ANOTHER BOSS</span><select id="bossActionSelect" aria-label="Choose another boss"></select></label>
         <button id="modalBossChoose" class="boss-action" type="button">USE THIS BOSS</button>
+        <button id="modalBossIntel" class="boss-action boss-action-intel" type="button">BOSS INTEL</button>
         <button id="modalBossNext" class="boss-action" type="button">NEXT BOSS</button>
         <button id="modalBossDefeated" class="boss-action boss-action-win" type="button">MARK DEFEATED</button>
         <button id="modalBossLost" class="boss-action" type="button">MARK LOST</button>
         <button id="modalBossClear" class="boss-action" type="button">CLEAR MARK</button>
+      </div>
+    </div>
+  </div>
+  <div class="picker-modal boss-intel-modal" id="bossIntelModal" role="dialog" aria-modal="true" aria-labelledby="bossIntelTitle" hidden>
+    <div class="picker-card boss-intel-card">
+      <div class="picker-heading-row boss-intel-heading">
+        <div>
+          <div class="picker-kicker" id="bossIntelType">BOSS INTEL</div>
+          <h2 id="bossIntelTitle">ENCOUNTER BRIEF</h2>
+          <p class="boss-intel-deck">Signature mechanics and the cleanest win plan—not every ordinary swipe.</p>
+        </div>
+        <button id="bossIntelClose" class="text-button" type="button">CLOSE</button>
+      </div>
+      <div class="boss-intel-layout">
+        <aside class="boss-intel-hero">
+          <img id="bossIntelPortrait" alt="" />
+          <div class="boss-intel-quick">
+            <div class="boss-intel-label">WHAT THIS FIGHT IS</div>
+            <p id="bossIntelOverview"></p>
+            <div class="boss-intel-alert">
+              <span>DANGER</span>
+              <p id="bossIntelDanger"></p>
+            </div>
+          </div>
+        </aside>
+        <div class="boss-intel-guide">
+          <section>
+            <div class="boss-intel-section-heading"><span>01</span><h3>SIGNATURE ABILITIES</h3></div>
+            <ol class="boss-intel-abilities" id="bossIntelAbilities"></ol>
+          </section>
+          <section>
+            <div class="boss-intel-section-heading"><span>02</span><h3>HOW TO WIN</h3></div>
+            <ol class="boss-intel-tips" id="bossIntelTips"></ol>
+          </section>
+        </div>
       </div>
     </div>
   </div>
@@ -242,6 +280,7 @@
   <script src="weapon-data.js"></script>
   <script src="boss-data.js"></script>
   <script src="boss-matchup-data.js"></script>
+  <script src="boss-intel-data.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
