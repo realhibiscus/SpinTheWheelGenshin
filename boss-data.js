@@ -1,4 +1,4 @@
-/* Generated from genshin-db enemy metadata plus Yatta monster resistance data. */
+/* Generated from genshin-db enemy metadata plus Yatta monster data. Level 103 HP uses live MonsterCurveExcelConfigData values. */
 window.GENSHIN_BOSSES = [
   {
     "id": "20040101",
@@ -8,6 +8,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 6,
     "icon": "UI_MonsterIcon_Effigy_Electric",
     "portrait": "assets/bosses/UI_MonsterIcon_Effigy_Electric.png",
+    "hpAtLevel103": 275905,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -27,6 +28,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 7,
     "icon": "UI_MonsterIcon_Effigy_Wind",
     "portrait": "assets/bosses/UI_MonsterIcon_Effigy_Wind.png",
+    "hpAtLevel103": 275905,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -46,6 +48,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 8,
     "icon": "UI_MonsterIcon_Regisvine_Ice",
     "portrait": "assets/bosses/UI_MonsterIcon_Regisvine_Ice.png",
+    "hpAtLevel103": 275905,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -65,6 +68,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 13,
     "icon": "UI_MonsterIcon_Effigy_Rock",
     "portrait": "assets/bosses/UI_MonsterIcon_Effigy_Rock.png",
+    "hpAtLevel103": 275905,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -84,6 +88,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 14,
     "icon": "UI_MonsterIcon_Oceanid",
     "portrait": "assets/bosses/UI_MonsterIcon_Oceanid.png",
+    "hpAtLevel103": 394149,
     "resistances": {
       "Pyro": 10,
       "Hydro": 100,
@@ -103,6 +108,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 15,
     "icon": "UI_MonsterIcon_Regisvine_Fire",
     "portrait": "assets/bosses/UI_MonsterIcon_Regisvine_Fire.png",
+    "hpAtLevel103": 275905,
     "resistances": {
       "Pyro": 70,
       "Hydro": 10,
@@ -122,6 +128,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 23,
     "icon": "UI_MonsterIcon_Drake_Primo_Rock",
     "portrait": "assets/bosses/UI_MonsterIcon_Drake_Primo_Rock.png",
+    "hpAtLevel103": 1182448,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -141,6 +148,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 25,
     "icon": "UI_MonsterIcon_Effigy_Ice",
     "portrait": "assets/bosses/UI_MonsterIcon_Effigy_Ice.png",
+    "hpAtLevel103": 275905,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -160,6 +168,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 26,
     "icon": "UI_MonsterIcon_Samurai_Ningyo",
     "portrait": "assets/bosses/UI_MonsterIcon_Samurai_Ningyo.png",
+    "hpAtLevel103": 788299,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -179,6 +188,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 27,
     "icon": "UI_MonsterIcon_Effigy_Fire",
     "portrait": "assets/bosses/UI_MonsterIcon_Effigy_Fire.png",
+    "hpAtLevel103": 275905,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -198,6 +208,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 28,
     "icon": "UI_MonsterIcon_Apparatus_Perpetual",
     "portrait": "assets/bosses/UI_MonsterIcon_Apparatus_Perpetual.png",
+    "hpAtLevel103": 974962,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -217,6 +228,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 32,
     "icon": "UI_MonsterIcon_Effigy_Water",
     "portrait": "assets/bosses/UI_MonsterIcon_Effigy_Water.png",
+    "hpAtLevel103": 354734,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -236,6 +248,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 33,
     "icon": "UI_MonsterIcon_Raijin",
     "portrait": "assets/bosses/UI_MonsterIcon_Raijin.png",
+    "hpAtLevel103": 853092,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -255,6 +268,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 36,
     "icon": "UI_MonsterIcon_Hound_Planelurker",
     "portrait": "assets/bosses/UI_MonsterIcon_Hound_Planelurker.png",
+    "hpAtLevel103": 731221,
     "resistances": {
       "Pyro": 25,
       "Hydro": 25,
@@ -274,6 +288,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 37,
     "icon": "UI_MonsterIcon_Drake_Deepsea_Ice",
     "portrait": "assets/bosses/UI_MonsterIcon_Drake_Deepsea_Ice.png",
+    "hpAtLevel103": 731221,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -293,6 +308,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 39,
     "icon": "UI_MonsterIcon_Nithhoggr_None",
     "portrait": "assets/bosses/UI_MonsterIcon_Nithhoggr_None.png",
+    "hpAtLevel103": 974962,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -312,6 +328,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 41,
     "icon": "UI_MonsterIcon_Regisvine_Electric",
     "portrait": "assets/bosses/UI_MonsterIcon_Regisvine_Electric.png",
+    "hpAtLevel103": 275905,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -331,6 +348,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 42,
     "icon": "UI_MonsterIcon_Fungus_Raptor",
     "portrait": "assets/bosses/UI_MonsterIcon_Fungus_Raptor.png",
+    "hpAtLevel103": 853092,
     "resistances": {
       "Pyro": 25,
       "Hydro": 25,
@@ -350,6 +368,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 46,
     "icon": "UI_MonsterIcon_Gargoyle_Fafnir",
     "portrait": "assets/bosses/UI_MonsterIcon_Gargoyle_Fafnir.png",
+    "hpAtLevel103": 1035897,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -369,6 +388,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 47,
     "icon": "UI_MonsterIcon_Monolith_Starchild",
     "portrait": "assets/bosses/UI_MonsterIcon_Monolith_Starchild.png",
+    "hpAtLevel103": 974962,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -388,6 +408,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 49,
     "icon": "UI_MonsterIcon_Effigy_Grass",
     "portrait": "assets/bosses/UI_MonsterIcon_Effigy_Grass.png",
+    "hpAtLevel103": 354734,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -407,6 +428,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 50,
     "icon": "UI_MonsterIcon_Sandworm",
     "portrait": "assets/bosses/UI_MonsterIcon_Sandworm.png",
+    "hpAtLevel103": 853092,
     "resistances": {
       "Pyro": 25,
       "Hydro": 25,
@@ -426,6 +448,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 53,
     "icon": "UI_MonsterIcon_Invoker_Archdeacon",
     "portrait": "assets/bosses/UI_MonsterIcon_Invoker_Archdeacon.png",
+    "hpAtLevel103": 609351,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -445,6 +468,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 58,
     "icon": "UI_MonsterIcon_MachinaIustitia_Nutcracker",
     "portrait": "assets/bosses/UI_MonsterIcon_MachinaIustitia_Nutcracker.png",
+    "hpAtLevel103": 914027,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -464,6 +488,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 58.1,
     "icon": "UI_MonsterIcon_MachinaIustitia_Nutcracker",
     "portrait": "assets/bosses/UI_MonsterIcon_MachinaIustitia_Nutcracker.png",
+    "hpAtLevel103": 914027,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -483,6 +508,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 59,
     "icon": "UI_MonsterIcon_HermitCrab_Primo",
     "portrait": "assets/bosses/UI_MonsterIcon_HermitCrab_Primo.png",
+    "hpAtLevel103": 731221,
     "resistances": {
       "Pyro": 60,
       "Hydro": 10,
@@ -502,6 +528,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 61,
     "icon": "UI_MonsterIcon_MachinaIustitia_Gravitas",
     "portrait": "assets/bosses/UI_MonsterIcon_MachinaIustitia_Gravitas.png",
+    "hpAtLevel103": 956681,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -521,6 +548,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 62,
     "icon": "UI_MonsterIcon_SeaHorse_Primo_Electric",
     "portrait": "assets/bosses/UI_MonsterIcon_SeaHorse_Primo_Electric.png",
+    "hpAtLevel103": 670286,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -540,6 +568,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 63,
     "icon": "UI_MonsterIcon_Narcissusborn_Normal_01",
     "portrait": "assets/bosses/UI_MonsterIcon_Narcissusborn_Normal_01.png",
+    "hpAtLevel103": 1340572,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -559,6 +588,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 64,
     "icon": "UI_MonsterIcon_Hermit",
     "portrait": "assets/bosses/UI_MonsterIcon_Hermit.png",
+    "hpAtLevel103": 1011523,
     "resistances": {
       "Pyro": 10,
       "Hydro": 70,
@@ -578,6 +608,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 66,
     "icon": "UI_MonsterIcon_Golem_Centaur",
     "portrait": "assets/bosses/UI_MonsterIcon_Golem_Centaur.png",
+    "hpAtLevel103": 974962,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -597,6 +628,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 68,
     "icon": "UI_MonsterIcon_Natsaurus_Hookwalker_Primo",
     "portrait": "assets/bosses/UI_MonsterIcon_Natsaurus_Hookwalker_Primo.png",
+    "hpAtLevel103": 1645248,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -616,6 +648,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 69,
     "icon": "UI_MonsterIcon_Natsaurus_Flamingo_Primo",
     "portrait": "assets/bosses/UI_MonsterIcon_Natsaurus_Flamingo_Primo.png",
+    "hpAtLevel103": 755595,
     "resistances": {
       "Pyro": 70,
       "Hydro": 10,
@@ -635,6 +668,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 76,
     "icon": "UI_MonsterIcon_DragonClaw",
     "portrait": "assets/bosses/UI_MonsterIcon_DragonClaw.png",
+    "hpAtLevel103": 1584313,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -654,6 +688,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 77,
     "icon": "UI_MonsterIcon_TheAbyss_Dendrite",
     "portrait": "assets/bosses/UI_MonsterIcon_TheAbyss_Dendrite.png",
+    "hpAtLevel103": 974962,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -673,6 +708,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 78,
     "icon": "UI_MonsterIcon_TribalWarrior_Udugan",
     "portrait": "assets/bosses/UI_MonsterIcon_TribalWarrior_Udugan.png",
+    "hpAtLevel103": 1035897,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -692,6 +728,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 79,
     "icon": "UI_MonsterIcon_LavaTitan",
     "portrait": "assets/bosses/UI_MonsterIcon_LavaTitan.png",
+    "hpAtLevel103": 1645248,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -711,6 +748,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 81,
     "icon": "UI_MonsterIcon_DragonCollar",
     "portrait": "assets/bosses/UI_MonsterIcon_DragonCollar.png",
+    "hpAtLevel103": 1316198,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -730,6 +768,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 87,
     "icon": "UI_MonsterIcon_Gastrobot_01",
     "portrait": "assets/bosses/UI_MonsterIcon_Gastrobot_01.png",
+    "hpAtLevel103": 1645248,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -749,6 +788,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 88,
     "icon": "UI_MonsterIcon_Magbeast_Pergesa",
     "portrait": "assets/bosses/UI_MonsterIcon_Magbeast_Pergesa.png",
+    "hpAtLevel103": 974962,
     "resistances": {
       "Pyro": 70,
       "Hydro": 10,
@@ -768,6 +808,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 89,
     "icon": "UI_MonsterIcon_HerraFrost",
     "portrait": "assets/bosses/UI_MonsterIcon_HerraFrost.png",
+    "hpAtLevel103": 1340572,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -787,6 +828,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 90,
     "icon": "UI_MonsterIcon_Fatuimecha_AMP",
     "portrait": "assets/bosses/UI_MonsterIcon_Fatuimecha_AMP.png",
+    "hpAtLevel103": 1340572,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -806,6 +848,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 92,
     "icon": "UI_MonsterIcon_Lloigor_Primo",
     "portrait": "assets/bosses/UI_MonsterIcon_Lloigor_Primo.png",
+    "hpAtLevel103": 1645248,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -825,6 +868,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 93,
     "icon": "UI_MonsterIcon_Magbeast_Gecko",
     "portrait": "assets/bosses/UI_MonsterIcon_Magbeast_Gecko.png",
+    "hpAtLevel103": 1279637,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -844,6 +888,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 94,
     "icon": "UI_MonsterIcon_Watcher_Primo_01",
     "portrait": "assets/bosses/UI_MonsterIcon_Watcher_Primo_01.png",
+    "hpAtLevel103": 1462443,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -863,6 +908,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 97,
     "icon": "UI_MonsterIcon_Zharptitsa_02",
     "portrait": "assets/bosses/UI_MonsterIcon_Zharptitsa_02.png",
+    "hpAtLevel103": 1888988,
     "resistances": {
       "Pyro": 50,
       "Hydro": 10,
@@ -882,6 +928,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": 98,
     "icon": "UI_MonsterIcon_Chimera_Manticore",
     "portrait": "assets/bosses/UI_MonsterIcon_Chimera_Manticore.png",
+    "hpAtLevel103": 1328385,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -901,6 +948,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": null,
     "icon": "UI_MonsterIcon_Ptahur_Devourer",
     "portrait": "assets/bosses/UI_MonsterIcon_Ptahur_Devourer.png",
+    "hpAtLevel103": 2437404,
     "resistances": {
       "Pyro": 10,
       "Hydro": 70,
@@ -920,6 +968,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": null,
     "icon": "UI_MonsterIcon_Dahaka",
     "portrait": "assets/bosses/UI_MonsterIcon_Dahaka.png",
+    "hpAtLevel103": 1418938,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -939,6 +988,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": null,
     "icon": "UI_MonsterIcon_Tartaglia",
     "portrait": "assets/bosses/UI_MonsterIcon_Tartaglia.png",
+    "hpAtLevel103": 394149,
     "resistances": {
       "Pyro": 10,
       "Hydro": 70,
@@ -958,6 +1008,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": null,
     "icon": "UI_MonsterIcon_Apep",
     "portrait": "assets/bosses/UI_MonsterIcon_Apep.png",
+    "hpAtLevel103": 974962,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -977,6 +1028,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": null,
     "icon": "UI_MonsterIcon_DrData",
     "portrait": "assets/bosses/UI_MonsterIcon_DrData.png",
+    "hpAtLevel103": 3899847,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -996,6 +1048,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": null,
     "icon": "UI_MonsterIcon_LaSignora",
     "portrait": "assets/bosses/UI_MonsterIcon_LaSignora.png",
+    "hpAtLevel103": 853092,
     "resistances": {
       "Pyro": 70,
       "Hydro": 10,
@@ -1015,6 +1068,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": null,
     "icon": "UI_MonsterIcon_TheAbyssXiuhcoatl",
     "portrait": "assets/bosses/UI_MonsterIcon_TheAbyssXiuhcoatl.png",
+    "hpAtLevel103": 5788835,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -1034,6 +1088,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": null,
     "icon": "UI_MonsterIcon_LupiBoreas",
     "portrait": "assets/bosses/UI_MonsterIcon_LupiBoreas.png",
+    "hpAtLevel103": 709469,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -1053,6 +1108,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": null,
     "icon": "UI_MonsterIcon_Shougun_Mitakenarukami",
     "portrait": "assets/bosses/UI_MonsterIcon_Shougun_Mitakenarukami.png",
+    "hpAtLevel103": 2437404,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -1072,6 +1128,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": null,
     "icon": "UI_MonsterIcon_Nada",
     "portrait": "assets/bosses/UI_MonsterIcon_Nada.png",
+    "hpAtLevel103": 1096832,
     "resistances": {
       "Pyro": 30,
       "Hydro": 30,
@@ -1091,6 +1148,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": null,
     "icon": "UI_MonsterIcon_Dvalin",
     "portrait": "assets/bosses/UI_MonsterIcon_Dvalin.png",
+    "hpAtLevel103": 354734,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -1110,6 +1168,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": null,
     "icon": "UI_MonsterIcon_Dotorre_Moon",
     "portrait": "assets/bosses/UI_MonsterIcon_Dotorre_Moon.png",
+    "hpAtLevel103": 5402052,
     "resistances": {
       "Pyro": 10,
       "Hydro": 10,
@@ -1129,6 +1188,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": null,
     "icon": "UI_MonsterIcon_GiantChess",
     "portrait": "assets/bosses/UI_MonsterIcon_GiantChess.png",
+    "hpAtLevel103": 3046755,
     "resistances": {
       "Pyro": 10,
       "Hydro": 70,
@@ -1148,6 +1208,7 @@ window.GENSHIN_BOSSES = [
     "handbookOrder": null,
     "icon": "UI_MonsterIcon_Nihil",
     "portrait": "assets/bosses/UI_MonsterIcon_Nihil.png",
+    "hpAtLevel103": 1645248,
     "resistances": {
       "Pyro": 70,
       "Hydro": 10,

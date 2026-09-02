@@ -1,15 +1,27 @@
 import { writeFile } from 'node:fs/promises';
 
 const [outputPath = 'boss-data.js'] = process.argv.slice(2);
+const hpLevel = 103;
+// Live MonsterCurveExcelConfigData values verified against game version 6.6.
+const hpLevelCurves = {
+  GROW_CURVE_HP: 2901.5706,
+  GROW_CURVE_HP_2: 4485.8
+};
 const resistanceFields = {
   Pyro: 'fireSubHurt', Hydro: 'waterSubHurt', Cryo: 'iceSubHurt', Electro: 'elecSubHurt',
   Anemo: 'windSubHurt', Geo: 'rockSubHurt', Dendro: 'grassSubHurt', Physical: 'physicalSubHurt'
 };
 const chineseElements = { '火': 'Pyro', '水': 'Hydro', '冰': 'Cryo', '电': 'Electro', '風': 'Anemo', '风': 'Anemo', '岩': 'Geo', '草': 'Dendro' };
 
-function parseBossResistances(monster, sourceId) {
+function getStandardEntry(monster, sourceId) {
   const entries = Object.values(monster?.entries || {});
-  const entry = entries.find(candidate => String(candidate.id) === String(sourceId)) || entries[0];
+  return entries.find(candidate => String(candidate.id) === String(sourceId))
+    || entries.find(candidate => candidate.reward)
+    || entries[0];
+}
+
+function parseBossMetadata(monster, sourceId) {
+  const entry = getStandardEntry(monster, sourceId);
   const result = Object.fromEntries(Object.entries(resistanceFields).map(([element, field]) => [element, Math.round((entry?.resistance?.[field] ?? 0.1) * 100)]));
   for (const affix of entry?.affix || []) {
     const text = `${affix.name || ''} ${affix.description || ''}`;
@@ -17,14 +29,19 @@ function parseBossResistances(monster, sourceId) {
     const amount = text.match(/[-+]?\s*(\d+)\s*%/);
     if (element && amount && /抗|resist/i.test(text)) result[element] = Math.max(result[element], Number(amount[1]));
   }
-  return result;
+  const hp = entry?.prop?.find(prop => prop.propType === 'FIGHT_PROP_BASE_HP');
+  const hpCurve = hpLevelCurves[hp?.type];
+  return {
+    hpAtLevel103: Number.isFinite(hp?.initValue) && hpCurve ? Math.round(hp.initValue * hpCurve) : null,
+    resistances: result
+  };
 }
 
-async function loadResistances(sourceId) {
+async function loadMonsterMetadata(sourceId) {
   for (let attempt = 0; attempt < 3; attempt += 1) {
     try {
       const response = await fetch(`https://gi.yatta.moe/api/v2/EN/monster/${sourceId}`);
-      if (response.ok) return parseBossResistances((await response.json()).data, sourceId);
+      if (response.ok) return parseBossMetadata((await response.json()).data, sourceId);
     } catch (_) {}
     await new Promise(resolve => setTimeout(resolve, 220 * (attempt + 1)));
   }
@@ -66,16 +83,16 @@ const catalog = (await response.json())
   })
   .sort((a, b) => (a.handbookOrder ?? 9999) - (b.handbookOrder ?? 9999) || a.name.localeCompare(b.name));
 
-const resistanceCache = new Map();
-const catalogWithResistances = await mapWithConcurrency(catalog, 4, async (boss) => ({
+const metadataCache = new Map();
+const catalogWithMetadata = await mapWithConcurrency(catalog, 4, async (boss) => ({
   ...boss,
-  resistances: await (resistanceCache.get(boss.sourceId) || (() => {
-    const pending = loadResistances(boss.sourceId);
-    resistanceCache.set(boss.sourceId, pending);
+  ...await (metadataCache.get(boss.sourceId) || (() => {
+    const pending = loadMonsterMetadata(boss.sourceId);
+    metadataCache.set(boss.sourceId, pending);
     return pending;
   })())
 }));
 
-const output = `/* Generated from genshin-db enemy metadata plus Yatta monster resistance data. */\nwindow.GENSHIN_BOSSES = ${JSON.stringify(catalogWithResistances, null, 2)};\n`;
+const output = `/* Generated from genshin-db enemy metadata plus Yatta monster data. Level ${hpLevel} HP uses live MonsterCurveExcelConfigData values. */\nwindow.GENSHIN_BOSSES = ${JSON.stringify(catalogWithMetadata, null, 2)};\n`;
 await writeFile(outputPath, output, 'utf8');
-console.log(`Generated ${catalogWithResistances.length} boss entries.`);
+console.log(`Generated ${catalogWithMetadata.length} boss entries with level ${hpLevel} HP.`);

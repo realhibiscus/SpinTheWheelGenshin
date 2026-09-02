@@ -8,7 +8,8 @@
   unequal slice sizes. Fate never removes an entry.
 
   CHALLENGE and BLESSING evolve independently: after an outcome is selected,
-  choose REMOVE to take it out of that wheel, or KEEP to leave it available.
+  choose REMOVE FROM WHEEL to take it out of that wheel, or KEEP ON WHEEL to
+  leave it available.
 */
 
 window.WHEEL_CONFIG = {

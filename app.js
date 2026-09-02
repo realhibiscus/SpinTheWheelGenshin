@@ -12,12 +12,24 @@
   const g = canvas.getContext('2d');
   const wheelWrap = document.getElementById('wheelWrap');
   const spinButton = document.getElementById('spinButton');
+  const wheelModeButtons = [...document.querySelectorAll('.wheel-mode-tab')];
+  const fateWheelPanel = document.getElementById('fateWheelPanel');
+  const characterWheelPanel = document.getElementById('characterWheelPanel');
+  const fateWheelLowerPanel = document.getElementById('fateWheelLowerPanel');
+  const characterCanvas = document.getElementById('characterWheel');
+  const characterG = characterCanvas.getContext('2d');
+  const characterWheelWrap = document.getElementById('characterWheelWrap');
+  const characterSpinButton = document.getElementById('characterSpinButton');
+  const characterPointer = document.getElementById('characterPointer');
+  const characterWheelRemaining = document.getElementById('characterWheelRemaining');
+  const characterWheelResetButton = document.getElementById('characterWheelResetButton');
+  const characterWheelResult = document.getElementById('characterWheelResult');
   const soundButton = document.getElementById('soundButton');
   const fullscreenButton = document.getElementById('fullscreenButton');
   const rosterButton = document.getElementById('rosterButton');
   const clearButton = document.getElementById('clearButton');
   const resetWheelButton = document.getElementById('resetWheelButton');
-  const pointer = document.querySelector('.pointer');
+  const pointer = wheelWrap.querySelector('.pointer');
   const title = document.getElementById('title');
   const subtitle = document.getElementById('subtitle');
   const resultText = document.getElementById('resultText');
@@ -70,6 +82,7 @@
   const bossIntelTitle = document.getElementById('bossIntelTitle');
   const bossIntelClose = document.getElementById('bossIntelClose');
   const bossIntelPortrait = document.getElementById('bossIntelPortrait');
+  const bossIntelHp = document.getElementById('bossIntelHp');
   const bossIntelOverview = document.getElementById('bossIntelOverview');
   const bossIntelDanger = document.getElementById('bossIntelDanger');
   const bossIntelAbilities = document.getElementById('bossIntelAbilities');
@@ -121,6 +134,7 @@
   const STORAGE_CHALLENGES = 'fateWheelChallengesV1';
   const STORAGE_BOSS_TRACKER = 'fateWheelBossTrackerV1';
   const STORAGE_FATE_PITY = 'fateWheelPityV1';
+  const STORAGE_CHARACTER_WHEEL_USED = 'fateCharacterWheelUsedV1';
   const routeKeys = ['punishment', 'blessing'];
   const characterCatalog = Array.isArray(window.GENSHIN_CHARACTERS) ? window.GENSHIN_CHARACTERS : [];
   const weaponCatalog = Array.isArray(window.GENSHIN_WEAPONS) ? window.GENSHIN_WEAPONS : [];
@@ -140,8 +154,19 @@
   const elementIconPaths = Object.fromEntries(['Anemo', 'Cryo', 'Dendro', 'Electro', 'Geo', 'Hydro', 'Pyro'].map(element => [element, `assets/elements/${element.toLowerCase()}.svg`]));
   const elementGlyphs = { Physical: 'PHY' };
   const weaponIconPaths = Object.fromEntries(['Sword', 'Claymore', 'Bow', 'Catalyst', 'Polearm'].map(weapon => [weapon, `assets/weapon-types/${weapon.toLowerCase()}.png`]));
+  const characterElementColors = {
+    Anemo: '#5fc7b2',
+    Cryo: '#8fdceb',
+    Dendro: '#8dbe38',
+    Electro: '#a779d3',
+    Geo: '#d8a33c',
+    Hydro: '#459de1',
+    Pyro: '#e45e45'
+  };
+  const characterWheelDefinition = { title: 'CHARACTER' };
 
   let currentWheelKey = 'fate';
+  let wheelMode = 'fate';
   let activeItems = [];
   let segments = [];
   let rotation = 0;
@@ -165,6 +190,13 @@
   let doubleNextFate = false;
   let targetSpinQueue = 0;
   let fateChallengeStreak = 0;
+  let characterWheelUsedIds = new Set();
+  let characterItems = [];
+  let characterSegments = [];
+  let characterRotation = 0;
+  let characterSpinning = false;
+  let characterSpinSerial = 0;
+  let characterLastPointerSegment = -1;
   let bossTracker = { sequenceVersion: 3, includeWorld: true, includeWeekly: false, currentId: null, results: {}, log: [] };
   const usedIds = { punishment: new Set(), blessing: new Set() };
 
@@ -226,7 +258,7 @@
 
   try {
     const savedHistory = JSON.parse(localStorage.getItem(STORAGE_HISTORY) || '[]');
-    if (Array.isArray(savedHistory)) history = savedHistory;
+    if (Array.isArray(savedHistory)) history = savedHistory.filter(entry => entry?.wheel !== 'CHARACTER');
   } catch (_) {}
 
   try {
@@ -234,6 +266,14 @@
     if (Array.isArray(savedRoster)) {
       const validIds = new Set(characterCatalog.map(character => String(character.id)));
       disabledCharacterIds = new Set(savedRoster.map(String).filter(id => validIds.has(id)));
+    }
+  } catch (_) {}
+
+  try {
+    const savedCharacterWheelIds = JSON.parse(localStorage.getItem(STORAGE_CHARACTER_WHEEL_USED) || '[]');
+    if (Array.isArray(savedCharacterWheelIds)) {
+      const validIds = new Set(characterCatalog.map(character => String(character.id)));
+      characterWheelUsedIds = new Set(savedCharacterWheelIds.map(String).filter(id => validIds.has(id)));
     }
   } catch (_) {}
 
@@ -321,10 +361,28 @@
     return wheel.items.filter(item => !usedIds[currentWheelKey].has(String(item.id)));
   }
 
+  function availableCharacterItems() {
+    return characterCatalog
+      .filter(character => !disabledCharacterIds.has(String(character.id)) && !characterWheelUsedIds.has(String(character.id)))
+      .map(character => ({
+        id: String(character.id),
+        label: character.name,
+        short: character.name,
+        portrait: character.portrait,
+        rarity: character.rarity,
+        element: character.element,
+        weaponType: character.weaponType
+      }));
+  }
+
   function persistUsed() {
     const data = {};
     routeKeys.forEach(key => { data[key] = [...usedIds[key]]; });
     try { localStorage.setItem(STORAGE_USED, JSON.stringify(data)); } catch (_) {}
+  }
+
+  function persistCharacterWheelUsed() {
+    try { localStorage.setItem(STORAGE_CHARACTER_WHEEL_USED, JSON.stringify([...characterWheelUsedIds])); } catch (_) {}
   }
 
   function persistHistory() {
@@ -628,14 +686,15 @@
       abilities: [],
       tips: ['Observe the first attack cycle before committing your full rotation.']
     };
-    bossIntelType.textContent = boss.type === 'weekly' ? 'WEEKLY BOSS INTEL' : 'WORLD BOSS INTEL';
+    bossIntelType.textContent = boss.type === 'weekly' ? 'Weekly boss' : 'World boss';
     bossIntelTitle.textContent = boss.name;
     bossIntelPortrait.src = boss.portrait;
     bossIntelPortrait.alt = `${boss.name} portrait`;
+    bossIntelHp.textContent = Number.isFinite(boss.hpAtLevel103) ? boss.hpAtLevel103.toLocaleString('en-US') : 'NOT AVAILABLE';
     bossIntelOverview.textContent = data.overview;
     bossIntelDanger.textContent = data.danger;
     bossIntelAbilities.innerHTML = data.abilities.map(([name, description]) => `<li><strong>${escapeHtml(name)}</strong><p>${escapeHtml(description)}</p></li>`).join('');
-    bossIntelTips.innerHTML = data.tips.map((tip, index) => `<li><span>${String(index + 1).padStart(2, '0')}</span><p>${escapeHtml(tip)}</p></li>`).join('');
+    bossIntelTips.innerHTML = data.tips.map((tip, index) => `<li><span>${index + 1}</span><p>${escapeHtml(tip)}</p></li>`).join('');
     bossIntelModal.hidden = false;
     document.body.classList.add('modal-open');
   }
@@ -651,6 +710,35 @@
     trackerView.hidden = !tracker;
     appTabs.forEach(tab => tab.classList.toggle('is-active', tab.dataset.view === view));
     if (tracker) renderBossTracker();
+    else requestAnimationFrame(() => wheelMode === 'character' ? resizeCharacterCanvas() : resizeCanvas());
+  }
+
+  function setWheelMode(mode) {
+    const nextMode = mode === 'character' ? 'character' : 'fate';
+    if (nextMode === wheelMode || spinning || characterSpinning || flowLocked) return;
+    wheelMode = nextMode;
+    const characterMode = wheelMode === 'character';
+    fateWheelPanel.hidden = characterMode;
+    fateWheelLowerPanel.hidden = characterMode;
+    characterWheelPanel.hidden = !characterMode;
+    wheelModeButtons.forEach((button) => {
+      const selected = button.dataset.wheelMode === wheelMode;
+      button.classList.toggle('is-active', selected);
+      button.setAttribute('aria-selected', String(selected));
+      button.tabIndex = selected ? 0 : -1;
+    });
+    if (characterMode) {
+      title.textContent = 'CHARACTER';
+      subtitle.textContent = 'SPIN YOUR ACTIVE ROSTER';
+      requestAnimationFrame(resizeCharacterCanvas);
+    } else {
+      const wheel = currentWheel();
+      title.textContent = wheel.title;
+      subtitle.textContent = wheel.subtitle || config.subtitle || 'EVERY DEATH = ONE SPIN';
+      requestAnimationFrame(resizeCanvas);
+    }
+    updateSpinState();
+    updateCharacterSpinState();
   }
 
   function clearChallenges() {
@@ -679,9 +767,12 @@
   function setWheel(key) {
     currentWheelKey = key;
     const wheel = currentWheel();
-    title.textContent = wheel.title;
-    subtitle.textContent = wheel.subtitle || config.subtitle || 'EVERY DEATH = ONE SPIN';
+    if (wheelMode === 'fate') {
+      title.textContent = wheel.title;
+      subtitle.textContent = wheel.subtitle || config.subtitle || 'EVERY DEATH = ONE SPIN';
+    }
     canvas.setAttribute('aria-label', `${wheel.title} wheel`);
+    spinButton.setAttribute('aria-label', `Spin the ${wheel.title} wheel`);
     updateActiveCharacterUI();
     rebuildSegments();
     renderFatePity();
@@ -719,7 +810,7 @@
   }
 
   function openCharacterPicker() {
-    if (spinning || flowLocked) return;
+    if (spinning || characterSpinning || flowLocked) return;
     characterPickerGroups.innerHTML = characterGroupsHtml('picker');
     characterPickerModal.hidden = false;
   }
@@ -739,7 +830,7 @@
   }
 
   function openRosterSettings() {
-    if (spinning || flowLocked) return;
+    if (spinning || characterSpinning || flowLocked) return;
     rosterDraft = new Set(disabledCharacterIds);
     weaponDraft = new Set(disabledWeaponIds);
     rosterGroups.innerHTML = characterGroupsHtml('roster');
@@ -772,6 +863,7 @@
     persistActiveCharacter();
     closeRosterSettings();
     updateActiveCharacterUI();
+    rebuildCharacterWheel();
     updateSpinState();
   }
 
@@ -785,6 +877,122 @@
       canvas.height = height;
     }
     drawWheel();
+  }
+
+  function resizeCharacterCanvas() {
+    const rect = characterCanvas.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+    const width = Math.max(1, Math.round(rect.width * dpr));
+    const height = Math.max(1, Math.round(rect.height * dpr));
+    if (characterCanvas.width !== width || characterCanvas.height !== height) {
+      characterCanvas.width = width;
+      characterCanvas.height = height;
+    }
+    drawCharacterWheel();
+  }
+
+  function rebuildCharacterWheel() {
+    characterItems = availableCharacterItems();
+    const count = characterItems.length;
+    characterSegments = characterItems.map((item, index) => ({
+      ...item,
+      index,
+      start: (index / count) * TAU,
+      end: ((index + 1) / count) * TAU
+    }));
+    characterRotation = 0;
+    characterWheelRemaining.textContent = String(count);
+    characterWheelResetButton.disabled = characterWheelUsedIds.size === 0;
+    drawCharacterWheel();
+    updateCharacterSpinState();
+  }
+
+  function drawCharacterWheel() {
+    const rect = characterCanvas.getBoundingClientRect();
+    const dpr = characterCanvas.width / Math.max(rect.width, 1);
+    const cssWidth = characterCanvas.width / dpr;
+    const cssHeight = characterCanvas.height / dpr;
+    const cx = cssWidth / 2;
+    const cy = cssHeight / 2;
+    const radius = Math.min(cssWidth, cssHeight) * .485;
+
+    characterG.setTransform(dpr, 0, 0, dpr, 0, 0);
+    characterG.clearRect(0, 0, cssWidth, cssHeight);
+
+    if (!characterSegments.length) {
+      const rosterCount = characterCatalog.filter(character => !disabledCharacterIds.has(String(character.id))).length;
+      characterG.save();
+      characterG.translate(cx, cy);
+      characterG.beginPath();
+      characterG.arc(0, 0, radius, 0, TAU);
+      characterG.fillStyle = '#171818';
+      characterG.fill();
+      characterG.strokeStyle = 'rgba(251,251,174,.72)';
+      characterG.lineWidth = 2.2;
+      characterG.stroke();
+      characterG.fillStyle = '#aaa9a3';
+      characterG.font = `600 ${Math.max(10, radius * .055)}px Bahnschrift, Arial Narrow, Segoe UI, sans-serif`;
+      characterG.textAlign = 'center';
+      characterG.textBaseline = 'middle';
+      characterG.fillText(rosterCount ? 'RESTORE REMOVED' : 'EDIT YOUR ROSTER', 0, 0, radius * 1.2);
+      characterG.restore();
+      return;
+    }
+
+    characterG.save();
+    characterG.translate(cx, cy);
+    characterG.rotate(characterRotation);
+    characterSegments.forEach((segment) => {
+      characterG.beginPath();
+      characterG.moveTo(0, 0);
+      characterG.arc(0, 0, radius, segment.start, segment.end);
+      characterG.closePath();
+      characterG.fillStyle = characterElementColors[segment.element] || '#aaa9a3';
+      characterG.fill();
+      characterG.strokeStyle = 'rgba(10,12,12,.62)';
+      characterG.lineWidth = 1;
+      characterG.stroke();
+      drawCharacterSegmentLabel(segment, radius);
+    });
+
+    characterG.beginPath();
+    characterG.arc(0, 0, radius, 0, TAU);
+    characterG.strokeStyle = 'rgba(245,245,241,.82)';
+    characterG.lineWidth = 2.2;
+    characterG.stroke();
+    characterG.beginPath();
+    characterG.arc(0, 0, radius * .225, 0, TAU);
+    characterG.fillStyle = '#0e1010';
+    characterG.fill();
+    characterG.strokeStyle = 'rgba(251,251,174,.72)';
+    characterG.lineWidth = 1.2;
+    characterG.stroke();
+    characterG.restore();
+  }
+
+  function drawCharacterSegmentLabel(segment, radius) {
+    const arc = segment.end - segment.start;
+    const degrees = arc * 180 / Math.PI;
+    if (degrees < 4.4) return;
+    const mid = (segment.start + segment.end) / 2;
+    const text = degrees < 8 && segment.label.length > 10 ? `${segment.label.slice(0, 8)}…` : segment.label;
+    const fontSize = Math.max(6, degrees < 8 ? radius * .022 : radius * .03);
+
+    characterG.save();
+    characterG.rotate(mid);
+    characterG.translate(radius * .79, 0);
+    const screenAngle = mod(mid + characterRotation, TAU);
+    if (screenAngle > 0 && screenAngle < Math.PI) characterG.rotate(Math.PI);
+    characterG.rotate(Math.PI / 2);
+    characterG.fillStyle = '#f5f5f1';
+    characterG.font = `700 ${fontSize}px Bahnschrift, Arial Narrow, Segoe UI, sans-serif`;
+    characterG.textAlign = 'center';
+    characterG.textBaseline = 'middle';
+    characterG.strokeStyle = 'rgba(8,10,10,.82)';
+    characterG.lineWidth = Math.max(1.2, fontSize * .28);
+    characterG.strokeText(text, 0, 0, radius * .48);
+    characterG.fillText(text, 0, 0, radius * .48);
+    characterG.restore();
   }
 
   function drawWheel() {
@@ -884,16 +1092,27 @@
     return choices[Math.floor(rng() * choices.length)];
   }
 
+  function equalCharacterPick() {
+    if (!characterSegments.length) return null;
+    return characterSegments[Math.floor(rng() * characterSegments.length)];
+  }
+
   function segmentUnderPointer(rot) {
     if (!segments.length) return -1;
     const local = mod(POINTER_ANGLE - rot, TAU);
     return segments.findIndex(segment => local >= segment.start && local < segment.end);
   }
 
-  function tick() {
-    pointer.classList.remove('tick');
-    void pointer.offsetWidth;
-    pointer.classList.add('tick');
+  function characterSegmentUnderPointer(rot) {
+    if (!characterSegments.length) return -1;
+    const local = mod(POINTER_ANGLE - rot, TAU);
+    return characterSegments.findIndex(segment => local >= segment.start && local < segment.end);
+  }
+
+  function tick(pointerElement = pointer) {
+    pointerElement.classList.remove('tick');
+    void pointerElement.offsetWidth;
+    pointerElement.classList.add('tick');
     if (!soundOn) return;
 
     try {
@@ -911,7 +1130,7 @@
   }
 
   function spin() {
-    if (spinning || flowLocked || !segments.length || (currentWheelKey === 'fate' && !activeCharacter())) return;
+    if (spinning || characterSpinning || flowLocked || !segments.length || (currentWheelKey === 'fate' && !activeCharacter())) return;
 
     spinning = true;
     const spinId = ++spinSerial;
@@ -959,6 +1178,69 @@
     requestAnimationFrame(frame);
   }
 
+  function spinCharacterWheel() {
+    if (characterSpinning || spinning || flowLocked || !characterSegments.length) return;
+
+    characterSpinning = true;
+    const spinId = ++characterSpinSerial;
+    updateSpinState();
+    updateCharacterSpinState();
+    const chosen = equalCharacterPick();
+    const margin = Math.min((chosen.end - chosen.start) * .16, .04);
+    const usableStart = chosen.start + margin;
+    const usableEnd = chosen.end - margin;
+    const targetLocalAngle = usableEnd > usableStart
+      ? usableStart + rng() * (usableEnd - usableStart)
+      : (chosen.start + chosen.end) / 2;
+    const turns = Math.floor(config.minTurns + rng() * ((config.maxTurns || config.minTurns + 1) - config.minTurns + 1));
+    const currentMod = mod(characterRotation, TAU);
+    const alignment = mod(POINTER_ANGLE - targetLocalAngle - currentMod, TAU);
+    const startRotation = characterRotation;
+    const endRotation = characterRotation + turns * TAU + alignment;
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const duration = reduceMotion ? Math.min(850, config.spinDurationMs || 5600) : (config.spinDurationMs || 5600);
+    const startTime = performance.now();
+    characterLastPointerSegment = characterSegmentUnderPointer(characterRotation);
+
+    function frame(now) {
+      if (spinId !== characterSpinSerial) return;
+      const progress = Math.min(1, (now - startTime) / duration);
+      characterRotation = startRotation + (endRotation - startRotation) * easeOutQuint(progress);
+      drawCharacterWheel();
+      const currentSegment = characterSegmentUnderPointer(characterRotation);
+      if (currentSegment !== characterLastPointerSegment) {
+        characterLastPointerSegment = currentSegment;
+        tick(characterPointer);
+      }
+      if (progress < 1) {
+        requestAnimationFrame(frame);
+        return;
+      }
+      characterRotation = mod(endRotation, TAU);
+      drawCharacterWheel();
+      characterSpinning = false;
+      resolveCharacterSpin(chosen);
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  function resolveCharacterSpin(item) {
+    flowLocked = true;
+    pendingOutcome = { wheelKey: 'character', item };
+    activeCharacterId = String(item.id);
+    persistActiveCharacter();
+    updateActiveCharacterUI();
+    characterWheelResult.textContent = `${item.label} is now your active character.`;
+    updateSpinState();
+    updateCharacterSpinState();
+    showOutcomeResult(item.label, characterWheelDefinition, {
+      name: item.label,
+      portrait: item.portrait,
+      detail: [`${item.rarity}★`, item.element, weaponTypeLabel(item.weaponType), 'NOW ACTIVE'].filter(Boolean).join(' · ').toUpperCase()
+    });
+  }
+
   function resolveSpin(item) {
     if (currentWheelKey === 'fate') {
       const target = item.target;
@@ -967,6 +1249,7 @@
       fateChallengeStreak = target === 'blessing' ? 0 : Math.min(5, fateChallengeStreak + 1);
       persistFatePity();
       flowLocked = true;
+      updateCharacterSpinState();
       resultText.textContent = `${wheels[target].title} wheel selected.`;
       showOverlay(pityTriggered ? 'BLESSING PITY' : 'FATE SELECTED', wheels[target].title, pityTriggered ? 'FIVE CHALLENGES WITHOUT A BLESSING' : `OPENING THE ${wheels[target].title} WHEEL`, config.routeRevealMs || 1100, () => {
         setWheel(target);
@@ -984,6 +1267,7 @@
 
     const wheel = currentWheel();
     flowLocked = true;
+    updateCharacterSpinState();
     pendingOutcome = { wheelKey: currentWheelKey, item };
     if (item.id === 'remove-punishment' && activeChallenges.some(effect => effect.type === 'challenge')) {
       openUndoChallengePicker(item, wheel);
@@ -998,16 +1282,19 @@
   }
 
   function showOutcomeResult(label, wheel, reveal = null) {
-    if (pendingOutcome) addActiveEffect(pendingOutcome.item, label);
-    history.unshift({ wheel: wheel.title, label, time: new Date().toISOString() });
-    history = history.slice(0, 100);
-    persistHistory();
-    renderHistory();
-    resultText.textContent = label;
-    resultChance.textContent = '';
-    resultFlash.classList.remove('show');
-    void resultFlash.offsetWidth;
-    resultFlash.classList.add('show');
+    const characterOutcome = pendingOutcome?.wheelKey === 'character';
+    if (!characterOutcome) {
+      if (pendingOutcome) addActiveEffect(pendingOutcome.item, label);
+      history.unshift({ wheel: wheel.title, label, time: new Date().toISOString() });
+      history = history.slice(0, 100);
+      persistHistory();
+      renderHistory();
+      resultText.textContent = label;
+      resultChance.textContent = '';
+      resultFlash.classList.remove('show');
+      void resultFlash.offsetWidth;
+      resultFlash.classList.add('show');
+    }
     outcomeModalKicker.textContent = `${wheel.title} RESULT`;
     outcomeModalTitle.textContent = reveal ? reveal.name : label;
     outcomeModalMeta.textContent = reveal ? reveal.detail : '';
@@ -1186,6 +1473,7 @@
     setWheel('fate');
     flowLocked = false;
     updateSpinState();
+    updateCharacterSpinState();
   }
 
   function keepOutcome() {
@@ -1195,13 +1483,27 @@
 
   function removeOutcome() {
     if (!pendingOutcome) return;
-    usedIds[pendingOutcome.wheelKey].add(String(pendingOutcome.item.id));
-    persistUsed();
+    if (pendingOutcome.wheelKey === 'character') {
+      characterWheelUsedIds.add(String(pendingOutcome.item.id));
+      persistCharacterWheelUsed();
+    } else {
+      usedIds[pendingOutcome.wheelKey].add(String(pendingOutcome.item.id));
+      persistUsed();
+    }
     finishOutcome(true);
   }
 
   function finishOutcome() {
+    const outcomeWheelKey = pendingOutcome?.wheelKey;
     const item = pendingOutcome?.item;
+    if (outcomeWheelKey === 'character') {
+      pendingOutcome = null;
+      closeOutcomeModal();
+      flowLocked = false;
+      rebuildCharacterWheel();
+      updateSpinState();
+      return;
+    }
     if (item?.id === 'spin-twice') doubleNextFate = true;
     if (targetSpinQueue > 1 && pendingOutcome?.wheelKey !== 'fate') {
       targetSpinQueue -= 1;
@@ -1221,7 +1523,7 @@
       return;
     }
     historyEl.innerHTML = history.map((entry, index) => {
-      const wheelClass = entry.wheel === 'CHALLENGE' ? 'punishment' : 'blessing';
+      const wheelClass = entry.wheel === 'CHALLENGE' ? 'punishment' : entry.wheel === 'CHARACTER' ? 'character' : 'blessing';
       return `<li><span class="history-index">${String(history.length - index).padStart(2, '0')}</span><span><em class="history-wheel history-wheel-${wheelClass}">${escapeHtml(entry.wheel || '')}</em><span>${escapeHtml(entry.label)}</span></span></li>`;
     }).join('');
   }
@@ -1237,7 +1539,30 @@
     statusStrip.innerHTML = `<div class="status-cell"><span>REMAINING</span><strong>${remaining}</strong></div>`;
   }
 
+  function updateCharacterSpinState() {
+    const label = characterSpinButton.querySelector('span');
+    const hint = characterSpinButton.querySelector('small');
+    characterWheelResetButton.disabled = characterWheelUsedIds.size === 0 || characterSpinning || spinning || flowLocked;
+    if (characterSpinning || spinning || flowLocked) {
+      characterSpinButton.disabled = true;
+      label.textContent = '...';
+      hint.textContent = 'WAIT';
+      return;
+    }
+    if (!characterSegments.length) {
+      const rosterCount = characterCatalog.filter(character => !disabledCharacterIds.has(String(character.id))).length;
+      characterSpinButton.disabled = true;
+      label.textContent = rosterCount ? 'EMPTY' : 'NO';
+      hint.textContent = rosterCount ? 'RESTORE' : 'ROSTER';
+      return;
+    }
+    characterSpinButton.disabled = false;
+    label.textContent = 'SPIN';
+    hint.textContent = 'SPACE';
+  }
+
   function updateSpinState() {
+    updateCharacterSpinState();
     if (spinning) {
       spinButton.disabled = true;
       spinButton.querySelector('span').textContent = '...';
@@ -1270,6 +1595,15 @@
     history = [];
     try { localStorage.removeItem(STORAGE_HISTORY); } catch (_) {}
     renderHistory();
+  }
+
+  function resetCharacterWheel() {
+    if (characterSpinning || spinning || flowLocked) return;
+    characterSpinSerial += 1;
+    characterWheelUsedIds.clear();
+    try { localStorage.removeItem(STORAGE_CHARACTER_WHEEL_USED); } catch (_) {}
+    characterWheelResult.textContent = 'All active-roster characters are back on the wheel.';
+    rebuildCharacterWheel();
   }
 
   function resetWheels() {
@@ -1314,12 +1648,15 @@
   }
 
   spinButton.addEventListener('click', spin);
+  characterSpinButton.addEventListener('click', spinCharacterWheel);
+  characterWheelResetButton.addEventListener('click', resetCharacterWheel);
   soundButton.addEventListener('click', toggleSound);
   fullscreenButton.addEventListener('click', toggleFullscreen);
   clearButton.addEventListener('click', clearHistory);
   clearChallengesButton.addEventListener('click', clearChallenges);
   trackerClearChallengesButton.addEventListener('click', clearChallenges);
   appTabs.forEach(tab => tab.addEventListener('click', () => switchView(tab.dataset.view)));
+  wheelModeButtons.forEach(button => button.addEventListener('click', () => setWheelMode(button.dataset.wheelMode)));
   includeWorldBosses.addEventListener('change', () => { bossTracker.includeWorld = includeWorldBosses.checked; selectFirstBoss(); renderBossTracker(); });
   includeWeeklyBosses.addEventListener('change', () => { bossTracker.includeWeekly = includeWeeklyBosses.checked; selectFirstBoss(); renderBossTracker(); });
   nextBossButton.addEventListener('click', chooseNextBoss);
@@ -1421,16 +1758,24 @@
     if (lotteryState && (event.code === 'Space' || event.key === 'Enter')) { event.preventDefault(); stopLottery(); return; }
     if (pendingOutcome && event.key === 'Enter') { event.preventDefault(); keepOutcome(); return; }
     if (pendingOutcome && event.key.toLowerCase() === 'x') { event.preventDefault(); removeOutcome(); return; }
-    if (event.code === 'Space') { event.preventDefault(); spin(); }
+    if (event.code === 'Space') { event.preventDefault(); wheelMode === 'character' ? spinCharacterWheel() : spin(); }
     if (event.key.toLowerCase() === 'f') toggleFullscreen();
-    if (event.key.toLowerCase() === 'r') resetWheels();
+    if (event.key.toLowerCase() === 'r') wheelMode === 'character' ? resetCharacterWheel() : resetWheels();
   });
 
-  const observer = new ResizeObserver(resizeCanvas);
+  const observer = new ResizeObserver(() => {
+    resizeCanvas();
+    resizeCharacterCanvas();
+  });
   observer.observe(wheelWrap);
-  window.addEventListener('resize', resizeCanvas);
+  observer.observe(characterWheelWrap);
+  window.addEventListener('resize', () => {
+    resizeCanvas();
+    resizeCharacterCanvas();
+  });
 
   setWheel('fate');
+  rebuildCharacterWheel();
   if (!currentBoss() && selectedBosses().length) selectFirstBoss();
   resultText.textContent = 'Spin the wheel.';
   renderFatePity();
@@ -1440,4 +1785,5 @@
   soundButton.textContent = soundOn ? 'SOUND ON' : 'SOUND OFF';
   soundButton.setAttribute('aria-pressed', String(soundOn));
   resizeCanvas();
+  resizeCharacterCanvas();
 })();

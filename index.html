@@ -27,17 +27,40 @@
 
     <section class="stage" id="wheelView">
       <div class="wheel-column">
-        <div class="wheel-wrap" id="wheelWrap">
-          <div class="pointer" aria-hidden="true"><span></span></div>
-          <canvas id="wheel" width="900" height="900" aria-label="Fate wheel"></canvas>
-          <button id="spinButton" class="spin-button" type="button" aria-label="Spin the wheel">
-            <span>SPIN</span>
-            <small>SPACE</small>
-          </button>
-        </div>
+        <nav class="wheel-mode-switch" role="tablist" aria-label="Choose a wheel">
+          <button id="fateWheelTab" class="wheel-mode-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="fateWheelPanel" data-wheel-mode="fate">WHEEL OF FATE</button>
+          <button id="characterWheelTab" class="wheel-mode-tab" type="button" role="tab" aria-selected="false" aria-controls="characterWheelPanel" data-wheel-mode="character">WHEEL OF CHARACTER</button>
+        </nav>
+        <div class="wheel-deck">
+          <section class="wheel-panel" id="fateWheelPanel" role="tabpanel" aria-labelledby="fateWheelTab">
+            <div class="wheel-wrap" id="wheelWrap">
+              <div class="pointer" aria-hidden="true"><span></span></div>
+              <canvas id="wheel" width="900" height="900" aria-label="Fate wheel"></canvas>
+              <button id="spinButton" class="spin-button" type="button" aria-label="Spin the Fate wheel">
+                <span>SPIN</span>
+                <small>SPACE</small>
+              </button>
+            </div>
+            <div class="status-strip" id="statusStrip" aria-label="Wheel status"></div>
+          </section>
 
-        <div class="status-strip" id="statusStrip" aria-label="Wheel status"></div>
-        <section class="wheel-lower-panel">
+          <section class="wheel-panel character-wheel-panel" id="characterWheelPanel" role="tabpanel" aria-labelledby="characterWheelTab" hidden>
+            <div class="wheel-wrap character-wheel-wrap" id="characterWheelWrap">
+              <div class="pointer character-pointer" id="characterPointer" aria-hidden="true"><span></span></div>
+              <canvas id="characterWheel" width="900" height="900" aria-label="Character wheel"></canvas>
+              <button id="characterSpinButton" class="spin-button character-spin-button" type="button" aria-label="Spin the Character wheel">
+                <span>SPIN</span>
+                <small>SPACE</small>
+              </button>
+            </div>
+            <div class="character-wheel-status">
+              <div><span>AVAILABLE</span><strong id="characterWheelRemaining">0</strong></div>
+              <button id="characterWheelResetButton" class="text-button" type="button">RESTORE REMOVED</button>
+            </div>
+            <p class="character-wheel-result" id="characterWheelResult" aria-live="polite">Spin from your active roster.</p>
+          </section>
+        </div>
+        <section class="wheel-lower-panel" id="fateWheelLowerPanel">
           <div class="result-section" aria-live="polite">
             <div class="panel-label">LATEST RESULT</div>
             <div id="resultText" class="result-text">Spin the wheel.</div>
@@ -164,8 +187,8 @@
       <h2 id="outcomeModalTitle" class="outcome-modal-title"></h2>
       <p class="outcome-modal-meta" id="outcomeModalMeta"></p>
       <div class="outcome-modal-actions">
-        <button id="keepOutcomeButton" class="outcome-button" type="button">KEEP</button>
-        <button id="removeOutcomeButton" class="outcome-button outcome-button-remove" type="button">REMOVE</button>
+        <button id="keepOutcomeButton" class="outcome-button" type="button">KEEP ON WHEEL</button>
+        <button id="removeOutcomeButton" class="outcome-button outcome-button-remove" type="button">REMOVE FROM WHEEL</button>
       </div>
     </div>
   </div>
@@ -211,32 +234,42 @@
   <div class="picker-modal boss-intel-modal" id="bossIntelModal" role="dialog" aria-modal="true" aria-labelledby="bossIntelTitle" hidden>
     <div class="picker-card boss-intel-card">
       <div class="picker-heading-row boss-intel-heading">
-        <div>
+        <div class="boss-intel-heading-copy">
           <div class="picker-kicker" id="bossIntelType">BOSS INTEL</div>
           <h2 id="bossIntelTitle">ENCOUNTER BRIEF</h2>
-          <p class="boss-intel-deck">Signature mechanics and the cleanest win plan—not every ordinary swipe.</p>
         </div>
-        <button id="bossIntelClose" class="text-button" type="button">CLOSE</button>
+        <div class="boss-intel-heading-side">
+          <button id="bossIntelClose" class="text-button" type="button">CLOSE</button>
+          <div class="boss-intel-vitals">
+            <div>
+              <span>Level 103 HP</span>
+              <strong id="bossIntelHp">—</strong>
+            </div>
+            <small>Single-player base HP · shields excluded</small>
+          </div>
+        </div>
       </div>
       <div class="boss-intel-layout">
         <aside class="boss-intel-hero">
-          <img id="bossIntelPortrait" alt="" />
+          <div class="boss-intel-portrait">
+            <img id="bossIntelPortrait" alt="" />
+          </div>
           <div class="boss-intel-quick">
-            <div class="boss-intel-label">WHAT THIS FIGHT IS</div>
+            <div class="boss-intel-label">Encounter summary</div>
             <p id="bossIntelOverview"></p>
             <div class="boss-intel-alert">
-              <span>DANGER</span>
+              <span>Main threat</span>
               <p id="bossIntelDanger"></p>
             </div>
           </div>
         </aside>
         <div class="boss-intel-guide">
           <section>
-            <div class="boss-intel-section-heading"><span>01</span><h3>SIGNATURE ABILITIES</h3></div>
+            <div class="boss-intel-section-heading"><h3>Key mechanics</h3></div>
             <ol class="boss-intel-abilities" id="bossIntelAbilities"></ol>
           </section>
           <section>
-            <div class="boss-intel-section-heading"><span>02</span><h3>HOW TO WIN</h3></div>
+            <div class="boss-intel-section-heading"><h3>Game plan</h3></div>
             <ol class="boss-intel-tips" id="bossIntelTips"></ol>
           </section>
         </div>
@@ -265,7 +298,7 @@
         </div>
         <button id="rosterCancelButton" class="text-button" type="button">CANCEL</button>
       </div>
-      <p class="picker-copy">Everything starts enabled. Click a portrait to dim it, then save; dimmed characters and weapons never appear in the relevant random result.</p>
+      <p class="picker-copy">Everything starts enabled. Click a portrait to dim it, then save; dimmed characters stay off the Character Wheel and all other random character results.</p>
       <div class="character-picker-groups" id="rosterGroups"></div>
       <div class="inventory-divider"><span>LOW-RARITY WEAPONS</span></div>
       <div class="character-picker-groups" id="rosterWeaponGroups"></div>
